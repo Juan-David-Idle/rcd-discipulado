@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discipulado 00 — Oidores y Hacedores | RcD Salamanca</title>
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --surface2: #f0ede6;
+    --border: #e0dbd0;
+    --border2: #c8c1b0;
+    --text: #1a1814;
+    --text2: #6b6457;
+    --text3: #9b9289;
+    --accent: #3b6b3e;
+    --accent-bg: #eaf3eb;
+    --accent-text: #2a4f2c;
+    --gold: #8a6f2e;
+    --gold-bg: #faf3e0;
+    --gold-text: #6b5420;
+    --danger: #8b2e2e;
+    --danger-bg: #fdf0f0;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 2rem;
+  }
+
+  header {
+    background: var(--accent);
+    color: white;
+    padding: 1.25rem 1.5rem;
+    text-align: center;
+  }
+  header .eyebrow {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-bottom: 4px;
+  }
+  header h1 {
+    font-size: 1.4rem;
+    font-weight: normal;
+    letter-spacing: 0.01em;
+  }
+  header .subtitle {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  .tabs-wrap {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    padding: 14px 18px;
+    border: none;
+    background: transparent;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    color: var(--text2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: bold;
+  }
+  .tab-btn:hover:not(.active) { color: var(--text); }
+
+  .screen { display: none; padding: 1.25rem 1rem; max-width: 680px; margin: 0 auto; }
+  .screen.active { display: block; }
+
+  /* Progress bar */
+  .prog-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-family: 'Arial', sans-serif; font-size: 12px; color: var(--text3); }
+  .prog-track { height: 5px; background: var(--surface2); border-radius: 99px; margin-bottom: 1.25rem; }
+  .prog-fill { height: 5px; background: var(--accent); border-radius: 99px; transition: width 0.35s ease; }
+
+  /* Flashcard */
+  .flashcard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    min-height: 260px;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .flashcard:hover { border-color: var(--border2); }
+  .fc-ref {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+    background: var(--accent-bg);
+    padding: 4px 12px;
+    border-radius: 99px;
+  }
+  .fc-theme {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .fc-question { font-size: 1rem; line-height: 1.65; color: var(--text); font-style: italic; }
+  .fc-verse { font-size: 0.95rem; line-height: 1.75; color: var(--text); }
+  .fc-keyword {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--gold-text);
+    background: var(--gold-bg);
+    border: 1px solid #e0d08a;
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    margin-top: 4px;
+  }
+  .fc-hint { font-family: 'Arial', sans-serif; font-size: 11px; color: var(--text3); margin-top: 4px; }
+  .fc-front { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .fc-back { display: none; flex-direction: column; align-items: center; gap: 10px; }
+  .flashcard.flipped .fc-front { display: none; }
+  .flashcard.flipped .fc-back { display: flex; }
+
+  .card-btns { display: flex; gap: 10px; margin-top: 1rem; }
+  .btn {
+    flex: 1;
+    padding: 11px;
+    border-radius: var(--radius-sm);
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--surface2); }
+  .btn.green { border-color: #7ab87d; color: var(--accent-text); background: var(--accent-bg); }
+  .btn.green:hover { background: #d4eddb; }
+  .btn.red { border-color: #e0a0a0; color: var(--danger); background: var(--danger-bg); }
+  .btn.red:hover { background: #fce0e0; }
+  .btn.primary { border-color: var(--accent); color: var(--accent-text); background: var(--accent-bg); }
+  .btn.primary:hover { background: #d4eddb; }
+
+  /* Fill in blank */
+  .fill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .fill-ref { font-family: 'Arial', sans-serif; font-size: 11px; font-weight: bold; color: var(--accent-text); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+  .fill-text { font-size: 0.95rem; line-height: 2; color: var(--text); }
+  .blank {
+    display: inline-block;
+    border-bottom: 2px solid var(--accent);
+    min-width: 80px;
+    color: var(--accent-text);
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 4px;
+    font-style: italic;
+  }
+  .blank.shown { color: var(--gold-text); border-color: var(--gold); }
+  .fill-hint { font-family: 'Arial', sans-serif; font-size: 11px; color: var(--text3); margin-top: 8px; }
+
+  /* Quiz */
+  .quiz-meta { font-family: 'Arial', sans-serif; font-size: 12px; color: var(--text3); text-align: center; margin-bottom: 1rem; }
+  .quiz-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .quiz-ref { font-family: 'Arial', sans-serif; font-size: 11px; font-weight: bold; color: var(--accent-text); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .quiz-q { font-size: 0.95rem; line-height: 1.65; color: var(--text); }
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .opt {
+    padding: 11px 14px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    font-family: 'Georgia', serif;
+    font-size: 0.9rem;
+    background: var(--surface);
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    line-height: 1.5;
+    transition: all 0.15s;
+  }
+  .opt:hover:not(:disabled) { background: var(--surface2); }
+  .opt.correct { background: var(--accent-bg); border-color: #7ab87d; color: var(--accent-text); }
+  .opt.wrong { background: var(--danger-bg); border-color: #e0a0a0; color: var(--danger); }
+
+  /* Progress screen */
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+  .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; text-align: center; }
+  .stat-num { font-size: 2rem; font-weight: normal; color: var(--text); }
+  .stat-lbl { font-family: 'Arial', sans-serif; font-size: 11px; color: var(--text3); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .vrow { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; }
+  .vdot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .vdot.k { background: var(--accent); }
+  .vdot.l { background: var(--gold); }
+  .vdot.n { background: var(--border2); }
+  .vrow-ref { font-size: 14px; font-weight: bold; color: var(--text); }
+  .vrow-theme { font-family: 'Arial', sans-serif; font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .vrow-status { font-family: 'Arial', sans-serif; font-size: 11px; color: var(--text2); margin-left: auto; white-space: nowrap; }
+
+  /* Section title */
+  .section-title { font-family: 'Arial', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 1rem; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+  footer { text-align: center; font-family: 'Arial', sans-serif; font-size: 11px; color: var(--text3); margin-top: 2rem; padding: 0 1rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">RcD Salamanca · Discipulado</div>
+  <h1>Oidores y Hacedores</h1>
+  <div class="subtitle">Capítulo 0 — Versículos para memorizar</div>
+</header>
+
+<div class="tabs-wrap">
+  <button class="tab-btn active" onclick="switchTab('flashcards',this)">📖 Tarjetas</button>
+  <button class="tab-btn" onclick="switchTab('fillblank',this)">✏️ Completa</button>
+  <button class="tab-btn" onclick="switchTab('quiz',this)">🧠 Quiz</button>
+  <button class="tab-btn" onclick="switchTab('progreso',this)">📊 Mi progreso</button>
+</div>
+
+<!-- FLASHCARDS -->
+<div id="screen-flashcards" class="screen active">
+  <div class="prog-row">
+    <span id="fc-counter">1 / 6</span>
+    <span id="fc-theme-label"></span>
+  </div>
+  <div class="prog-track"><div class="prog-fill" id="fc-bar" style="width:16%"></div></div>
+  <div class="flashcard" id="flashcard" onclick="flipCard()">
+    <div class="fc-front" id="fc-front"></div>
+    <div class="fc-back" id="fc-back"></div>
+  </div>
+  <div class="card-btns" id="btns-flip">
+    <button class="btn primary" onclick="flipCard();event.stopPropagation()">👁 Ver versículo completo</button>
+  </div>
+  <div class="card-btns" id="btns-eval" style="display:none">
+    <button class="btn red" onclick="markCard(false)">✗ Necesito repasar</button>
+    <button class="btn green" onclick="markCard(true)">✓ ¡Lo sé!</button>
+  </div>
+</div>
+
+<!-- FILL IN BLANK -->
+<div id="screen-fillblank" class="screen">
+  <div class="section-title">Toca cada espacio en blanco para revelar la palabra clave</div>
+  <div id="fill-wrap"></div>
+  <button class="btn" style="width:100%;margin-top:0.5rem" onclick="renderFill()">↺ Ocultar todo de nuevo</button>
+</div>
+
+<!-- QUIZ -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-meta" id="quiz-meta">Pregunta 1 de 11 · Puntuación: 0</div>
+  <div class="quiz-card">
+    <div class="quiz-ref" id="quiz-ref"></div>
+    <div class="quiz-q" id="quiz-q"></div>
+  </div>
+  <div class="options" id="quiz-opts"></div>
+  <button class="btn primary" id="quiz-next" style="display:none;width:100%" onclick="nextQuiz()">Siguiente pregunta →</button>
+</div>
+
+<!-- PROGRESO -->
+<div id="screen-progreso" class="screen">
+  <div class="section-title">Tu progreso</div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="s-k">0</div><div class="stat-lbl">Dominados</div></div>
+    <div class="stat-box"><div class="stat-num" id="s-l">0</div><div class="stat-lbl">Aprendiendo</div></div>
+    <div class="stat-box"><div class="stat-num" id="s-n">0</div><div class="stat-lbl">Sin repasar</div></div>
+  </div>
+  <div id="verse-list"></div>
+  <button class="btn red" style="width:100%;margin-top:1rem" onclick="resetAll()">↺ Reiniciar progreso</button>
+</div>
+
+<footer>
+  <p>Reconcíliate con Dios · Salamanca · Basado en la Reina Valera 1960</p>
+  <p style="margin-top:4px">Guarda este archivo HTML para usarlo sin internet</p>
+</footer>
+
+<script>
+const VERSES = [
+  {
+    ref: "Mateo 28:16-20",
+    theme: "La Gran Comisión",
+    keyword: "Id · haced discípulos · bautizando · enseñando",
+    question: "¿Qué tres mandatos dio Jesús en la Gran Comisión y qué promesa añadió al final?",
+    verse: "Los once discípulos se fueron a Galilea, al monte donde Jesús les había ordenado. Y Jesús se acercó y les habló diciendo: Toda potestad me es dada en el cielo y en la tierra. Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo; enseñándoles que guarden todas las cosas que os he mandado; y he aquí yo estoy con vosotros todos los días, hasta el fin del mundo. Amén."
+  },
+  {
+    ref: "Santiago 1:19-26",
+    theme: "Oidores y hacedores",
+    keyword: "Sed hacedores de la palabra · no tan solamente oidores",
+    question: "¿Qué actitudes describe Santiago 1:19-26 y cuál es la advertencia central del pasaje?",
+    verse: "Todo hombre sea pronto para oír, tardo para hablar, tardo para airarse; porque la ira del hombre no obra la justicia de Dios. Desechando toda inmundicia y abundancia de malicia, recibid con mansedumbre la palabra implantada. Pero sed hacedores de la palabra, y no tan solamente oidores, engañándoos a vosotros mismos. Porque el oidor que no es hacedor es semejante al que ve su rostro en un espejo y luego olvida cómo era. Mas el que mira atentamente en la perfecta ley, la de la libertad, y persevera en ella, siendo hacedor de la obra, éste será bienaventurado en lo que hace. La religión pura es: visitar a los huérfanos y a las viudas en sus tribulaciones, y guardarse sin mancha del mundo."
+  },
+  {
+    ref: "Romanos 2:13",
+    theme: "Justificación",
+    keyword: "Los hacedores de la ley serán justificados",
+    question: "Según Romanos 2:13, ¿quiénes son los justos ante Dios: los que oyen la ley o los que la hacen?",
+    verse: "Porque no son los oidores de la ley los justos ante Dios, sino los hacedores de la ley serán justificados."
+  },
+  {
+    ref: "Lucas 6:46-49",
+    theme: "Cimientos — la roca y la arena",
+    keyword: "¿Por qué me llamáis Señor y no hacéis lo que digo? · casa sobre la roca · casa sobre arena",
+    question: "¿A qué compara Jesús al que oye y hace su Palabra, y al que oye pero no la hace?",
+    verse: "¿Por qué me llamáis, Señor, Señor, y no hacéis lo que yo digo? Todo aquel que viene a mí, y oye mis palabras y las hace, es semejante al hombre que edificó su casa sobre la roca; vino la inundación y el río dio con ímpetu contra ella, pero no la pudo mover, porque estaba fundada sobre la roca. Mas el que oyó y no hizo, semejante es al hombre que edificó sobre tierra sin fundamento; el río dio con ímpetu contra ella y fue grande la ruina de aquella casa."
+  },
+  {
+    ref: "Gálatas 5:14-15",
+    theme: "Armonía en la iglesia",
+    keyword: "Amarás a tu prójimo como a ti mismo · si os mordéis y os coméis unos a otros",
+    question: "¿En qué sola palabra se resume toda la ley según Gálatas 5:14, y qué advertencia da el v.15?",
+    verse: "Porque toda la ley en esta sola palabra se cumple: Amarás a tu prójimo como a ti mismo. Pero si os mordéis y os coméis unos a otros, mirad que también no os consumáis unos a otros."
+  },
+  {
+    ref: "Salmo 133:1 y 3",
+    theme: "Armonía y bendición",
+    keyword: "Cuán bueno habitar juntos en armonía · allí envía Jehová bendición y vida eterna",
+    question: "¿Qué promesa da el Salmo 133 cuando los hermanos habitan juntos en armonía?",
+    verse: "¡Mirad cuán bueno y cuán delicioso es habitar los hermanos juntos en armonía! Porque allí envía Jehová bendición, y vida eterna."
+  }
+];
+
+const QUIZ = [
+  { ref:"Mateo 28:18", q:"Completa: 'Toda potestad me es dada ______'", opts:["en el cielo solamente","a mí y a mis apóstoles","en el cielo y en la tierra","sobre toda la creación"], c:2 },
+  { ref:"Mateo 28:19-20", q:"¿Cuáles son los tres mandatos de la Gran Comisión?", opts:["Predicar, sanar y echar demonios","Ir, bautizar y enseñar que guarden","Orar, ayunar y dar","Creer, confesar y recibir"], c:1 },
+  { ref:"Mateo 28:20", q:"¿Qué promesa cierra la Gran Comisión?", opts:["Recibiréis poder del Espíritu Santo","Os daré las naciones en herencia","Yo estoy con vosotros todos los días hasta el fin del mundo","Haréis obras mayores que las mías"], c:2 },
+  { ref:"Santiago 1:22", q:"Completa: 'Sed hacedores de la palabra, y no tan solamente oidores, ______'", opts:["guardando los mandamientos","buscando la sabiduría divina","esperando en el Señor","engañándoos a vosotros mismos"], c:3 },
+  { ref:"Santiago 1:25", q:"El que persevera en la perfecta ley y es hacedor de la obra:", opts:["recibirá el Espíritu en abundancia","éste será bienaventurado en lo que hace","será exaltado delante de los hombres","prosperará en todos sus caminos"], c:1 },
+  { ref:"Romanos 2:13", q:"Según Romanos 2:13, ¿quiénes serán justificados ante Dios?", opts:["Los que conocen la Escritura","Los oidores de la ley","Los hacedores de la ley","Los que oran sin cesar"], c:2 },
+  { ref:"Lucas 6:46", q:"¿Qué pregunta hace Jesús en Lucas 6:46?", opts:["¿Por qué buscáis entre los muertos al que vive?","¿Por qué me llamáis Señor, Señor, y no hacéis lo que yo digo?","¿Acaso no sabéis que yo soy el camino?","¿Por qué dudáis, hombres de poca fe?"], c:1 },
+  { ref:"Lucas 6:48-49", q:"¿Qué les sucede a las dos casas cuando viene la inundación?", opts:["Ambas resisten según la fe de su dueño","La de la roca no se mueve; la de la arena cae y es grande su ruina","Ambas caen pero la de la roca se reconstruye","Solo cae la de arena si el viento es muy fuerte"], c:1 },
+  { ref:"Gálatas 5:14", q:"Completa: 'Toda la ley en esta sola palabra se cumple: ______'", opts:["Adorarás al Señor tu Dios con todo tu corazón","No harás a otro lo que no quieres para ti","Amarás a tu prójimo como a ti mismo","Busca primero el reino de Dios y su justicia"], c:2 },
+  { ref:"Gálatas 5:15", q:"¿Qué advierte Gálatas 5:15 si nos mordemos y comemos unos a otros?", opts:["Perdemos la unción del Espíritu","Dios retira su presencia","También nos consumimos unos a otros","El diablo entra en la congregación"], c:2 },
+  { ref:"Salmo 133:1 y 3", q:"Completa: 'Mirad cuán bueno y cuán delicioso es ______; porque allí envía Jehová ______'", opts:["orar en el templo / lluvia abundante","habitar los hermanos juntos en armonía / bendición y vida eterna","buscar a Dios de madrugada / su Espíritu","alabar a Dios con cánticos / salvación"], c:1 },
+];
+
+let fcIdx=0, fcFlipped=false;
+let qIdx=0, qScore=0, qTotal=0, qAnswered=false;
+let progress={};
+
+function loadP(){ try{ progress=JSON.parse(localStorage.getItem('rcd_disc_00')||'{}'); }catch(e){ progress={}; } }
+function saveP(){ try{ localStorage.setItem('rcd_disc_00',JSON.stringify(progress)); }catch(e){} }
+loadP();
+
+function switchTab(tab,el){
+  document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('screen-'+tab).classList.add('active');
+  if(tab==='fillblank') renderFill();
+  if(tab==='quiz'){ qIdx=0;qScore=0;qTotal=0; showQuiz(); }
+  if(tab==='progreso') renderProgress();
+}
+
+function renderCard(){
+  const v=VERSES[fcIdx];
+  const fc=document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  fcFlipped=false;
+  document.getElementById('btns-flip').style.display='flex';
+  document.getElementById('btns-eval').style.display='none';
+  document.getElementById('fc-front').innerHTML=`
+    <div class="fc-ref">${v.ref}</div>
+    <div class="fc-theme">${v.theme}</div>
+    <div class="fc-question">"${v.question}"</div>
+    <div class="fc-hint">— Toca para ver el versículo —</div>
+  `;
+  document.getElementById('fc-back').innerHTML=`
+    <div class="fc-ref">${v.ref}</div>
+    <div class="fc-verse">${v.verse}</div>
+    <div class="fc-keyword">📌 Palabras clave: ${v.keyword}</div>
+  `;
+  document.getElementById('fc-theme-label').textContent=v.theme;
+  const n=VERSES.length;
+  document.getElementById('fc-counter').textContent=(fcIdx+1)+' / '+n;
+  document.getElementById('fc-bar').style.width=((fcIdx+1)/n*100)+'%';
+}
+
+function flipCard(){
+  if(fcFlipped) return;
+  fcFlipped=true;
+  document.getElementById('flashcard').classList.add('flipped');
+  document.getElementById('btns-flip').style.display='none';
+  document.getElementById('btns-eval').style.display='flex';
+}
+
+function markCard(knew){
+  const ref=VERSES[fcIdx].ref;
+  if(!progress[ref]) progress[ref]={k:0,s:0};
+  progress[ref].s++;
+  if(knew) progress[ref].k++;
+  saveP();
+  fcIdx=(fcIdx+1)%VERSES.length;
+  renderCard();
+}
+
+function renderFill(){
+  const fills=[
+    { ref:"Mateo 28:19-20", parts:["Por tanto, id, y {haced discípulos} a todas las naciones, {bautizándolos} en el nombre del Padre, y del Hijo, y del Espíritu Santo; {enseñándoles que guarden} todas las cosas que os he mandado."] },
+    { ref:"Santiago 1:22", parts:["Pero sed {hacedores de la palabra}, y no tan solamente {oidores}, engañándoos a vosotros mismos."] },
+    { ref:"Santiago 1:25", parts:["Mas el que mira atentamente en la perfecta ley, la de la {libertad}, y persevera en ella, no siendo oidor olvidadizo, sino {hacedor de la obra}, éste será {bienaventurado} en lo que hace."] },
+    { ref:"Romanos 2:13", parts:["Porque no son los {oidores} de la ley los justos ante Dios, sino los {hacedores de la ley} serán justificados."] },
+    { ref:"Lucas 6:46", parts:["¿Por qué me llamáis, {Señor, Señor}, y no hacéis lo que yo digo?"] },
+    { ref:"Gálatas 5:14-15", parts:["Toda la ley en esta sola palabra se cumple: {Amarás a tu prójimo como a ti mismo}. Pero si os {mordéis y os coméis} unos a otros, mirad que también no os consumáis unos a otros."] },
+    { ref:"Salmo 133:1 y 3", parts:["¡Mirad cuán bueno y cuán delicioso es {habitar los hermanos juntos en armonía}! Porque allí envía Jehová {bendición, y vida eterna}."] },
+  ];
+  let html='';
+  fills.forEach((f,fi)=>{
+    let counter=0;
+    const text=f.parts[0].replace(/\{([^}]+)\}/g,(m,w)=>{
+      const id=`b${fi}_${counter++}`;
+      const dashes='_'.repeat(Math.min(w.length,14));
+      return `<span class="blank" id="${id}" data-w="${w.replace(/"/g,'&quot;')}" onclick="reveal('${id}')">${dashes}</span>`;
+    });
+    html+=`<div class="fill-card"><div class="fill-ref">${f.ref}</div><div class="fill-text">${text}</div><div class="fill-hint">Toca el espacio en blanco para revelar</div></div>`;
+  });
+  document.getElementById('fill-wrap').innerHTML=html;
+}
+
+function reveal(id){
+  const el=document.getElementById(id);
+  if(el){ el.textContent=el.dataset.w; el.classList.add('shown'); }
+}
+
+function showQuiz(){
+  const q=QUIZ[qIdx%QUIZ.length];
+  document.getElementById('quiz-ref').textContent=q.ref;
+  document.getElementById('quiz-q').textContent=q.q;
+  document.getElementById('quiz-meta').textContent='Pregunta '+(qIdx+1)+' · Puntuación: '+qScore+' / '+qTotal;
+  const opts=document.getElementById('quiz-opts');
+  opts.innerHTML=q.opts.map((o,i)=>`<button class="opt" onclick="answerQ(${i})">${o}</button>`).join('');
+  document.getElementById('quiz-next').style.display='none';
+  qAnswered=false;
+}
+
+function answerQ(i){
+  if(qAnswered) return;
+  qAnswered=true; qTotal++;
+  const q=QUIZ[qIdx%QUIZ.length];
+  if(i===q.c) qScore++;
+  document.getElementById('quiz-opts').querySelectorAll('.opt').forEach((o,idx)=>{
+    o.disabled=true;
+    if(idx===q.c) o.classList.add('correct');
+    else if(idx===i) o.classList.add('wrong');
+  });
+  document.getElementById('quiz-meta').textContent='Pregunta '+(qIdx+1)+' · Puntuación: '+qScore+' / '+qTotal;
+  document.getElementById('quiz-next').style.display='block';
+}
+
+function nextQuiz(){
+  qIdx++;
+  showQuiz();
+}
+
+function renderProgress(){
+  let k=0,l=0,n=0,html='';
+  VERSES.forEach(v=>{
+    const p=progress[v.ref];
+    let dot='n',lbl='Sin repasar';
+    if(p&&p.s>0){
+      if(p.k/p.s>=0.8&&p.s>=3){ dot='k'; lbl='Dominado ✓'; k++; }
+      else { dot='l'; lbl='Aprendiendo ('+p.k+'/'+p.s+')'; l++; }
+    } else n++;
+    html+=`<div class="vrow"><div class="vdot ${dot}"></div><div><div class="vrow-ref">${v.ref}</div><div class="vrow-theme">${v.theme}</div></div><div class="vrow-status">${lbl}</div></div>`;
+  });
+  document.getElementById('s-k').textContent=k;
+  document.getElementById('s-l').textContent=l;
+  document.getElementById('s-n').textContent=n;
+  document.getElementById('verse-list').innerHTML=html;
+}
+
+function resetAll(){
+  if(confirm('¿Reiniciar todo el progreso guardado?')){ progress={}; saveP(); renderProgress(); }
+}
+
+renderCard();
+</script>
+</body>
+</html>
