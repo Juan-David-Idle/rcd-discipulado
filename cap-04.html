@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo nos llegó la Biblia | RcD Salamanca</title>
+<style>
+:root {
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: #e0dbd0;
+  --border2: #c8c1b0;
+  --text: #1a1814;
+  --text2: #6b6457;
+  --text3: #9b9289;
+  --accent: #2e4057;
+  --accent-bg: #eaecf0;
+  --accent-text: #1a2535;
+  --gold: #8a6f2e;
+  --gold-bg: #faf3e0;
+  --gold-text: #6b5420;
+  --danger: #8b2e2e;
+  --danger-bg: #fdf0f0;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Georgia','Times New Roman',serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:2rem}
+header{background:var(--accent);color:white;padding:1.25rem 1.5rem;text-align:center}
+header .eyebrow{font-family:Arial,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.75;margin-bottom:4px}
+header h1{font-size:1.4rem;font-weight:normal}
+header .subtitle{font-family:Arial,sans-serif;font-size:12px;opacity:.7;margin-top:4px;font-style:italic}
+.back-link{display:block;text-align:center;padding:10px;font-family:Arial,sans-serif;font-size:13px;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--border)}
+.back-link:hover{background:var(--surface2)}
+.tabs-wrap{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1rem;display:flex;gap:0;overflow-x:auto}
+.tab-btn{padding:14px 16px;border:none;background:transparent;font-family:Arial,sans-serif;font-size:13px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:bold}
+.tab-btn:hover:not(.active){color:var(--text)}
+.screen{display:none;padding:1.25rem 1rem;max-width:680px;margin:0 auto}
+.screen.active{display:block}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-family:Arial,sans-serif;font-size:12px;color:var(--text3)}
+.prog-track{height:5px;background:var(--surface2);border-radius:99px;margin-bottom:1.25rem}
+.prog-fill{height:5px;background:var(--accent);border-radius:99px;transition:width .35s ease}
+.flashcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);min-height:260px;padding:1.75rem 1.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;cursor:pointer;transition:border-color .2s}
+.flashcard:hover{border-color:var(--border2)}
+.fc-ref{font-family:Arial,sans-serif;font-size:11px;font-weight:bold;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-text);background:var(--accent-bg);padding:4px 12px;border-radius:99px}
+.fc-theme{font-family:Arial,sans-serif;font-size:11px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
+.fc-question{font-size:1rem;line-height:1.65;color:var(--text);font-style:italic}
+.fc-verse{font-size:.93rem;line-height:1.8;color:var(--text)}
+.fc-keyword{font-family:Arial,sans-serif;font-size:12px;color:var(--gold-text);background:var(--gold-bg);border:1px solid #e0d08a;border-radius:var(--radius-sm);padding:6px 12px;margin-top:4px}
+.fc-hint{font-family:Arial,sans-serif;font-size:11px;color:var(--text3);margin-top:4px}
+.fc-front{display:flex;flex-direction:column;align-items:center;gap:10px}
+.fc-back{display:none;flex-direction:column;align-items:center;gap:10px}
+.flashcard.flipped .fc-front{display:none}
+.flashcard.flipped .fc-back{display:flex}
+.card-btns{display:flex;gap:10px;margin-top:1rem}
+.btn{flex:1;padding:11px;border-radius:var(--radius-sm);font-family:Arial,sans-serif;font-size:14px;cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text);transition:all .15s}
+.btn:hover{background:var(--surface2)}
+.btn.green{border-color:#7ab87d;color:#2a4f2c;background:#eaf3eb}
+.btn.green:hover{background:#d4eddb}
+.btn.red{border-color:#e0a0a0;color:var(--danger);background:var(--danger-bg)}
+.btn.red:hover{background:#fce0e0}
+.btn.primary{border-color:var(--accent);color:var(--accent-text);background:var(--accent-bg)}
+.btn.primary:hover{filter:brightness(.95)}
+.fill-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.fill-ref{font-family:Arial,sans-serif;font-size:11px;font-weight:bold;color:var(--accent-text);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.fill-text{font-size:.93rem;line-height:2.1;color:var(--text)}
+.blank{display:inline-block;border-bottom:2px solid var(--accent);min-width:80px;color:var(--accent-text);font-weight:bold;cursor:pointer;padding:0 4px;font-style:italic}
+.blank.shown{color:var(--gold-text);border-color:var(--gold)}
+.fill-hint{font-family:Arial,sans-serif;font-size:11px;color:var(--text3);margin-top:8px}
+.quiz-meta{font-family:Arial,sans-serif;font-size:12px;color:var(--text3);text-align:center;margin-bottom:1rem}
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.quiz-ref{font-family:Arial,sans-serif;font-size:11px;font-weight:bold;color:var(--accent-text);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.quiz-q{font-size:.93rem;line-height:1.65;color:var(--text)}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.opt{padding:11px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-family:Georgia,serif;font-size:.88rem;background:var(--surface);color:var(--text);text-align:left;cursor:pointer;line-height:1.5;transition:all .15s}
+.opt:hover:not(:disabled){background:var(--surface2)}
+.opt.correct{background:#eaf3eb;border-color:#7ab87d;color:#2a4f2c}
+.opt.wrong{background:var(--danger-bg);border-color:#e0a0a0;color:var(--danger)}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1.5rem}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;text-align:center}
+.stat-num{font-size:2rem;font-weight:normal;color:var(--text)}
+.stat-lbl{font-family:Arial,sans-serif;font-size:11px;color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:.06em}
+.vrow{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px}
+.vdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.vdot.k{background:var(--accent)}
+.vdot.l{background:var(--gold)}
+.vdot.n{background:var(--border2)}
+.vrow-ref{font-size:14px;font-weight:bold;color:var(--text)}
+.vrow-theme{font-family:Arial,sans-serif;font-size:11px;color:var(--text3);margin-top:2px}
+.vrow-status{font-family:Arial,sans-serif;font-size:11px;color:var(--text2);margin-left:auto;white-space:nowrap}
+.section-title{font-family:Arial,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid var(--border)}
+footer{text-align:center;font-family:Arial,sans-serif;font-size:11px;color:var(--text3);margin-top:2rem;padding:0 1rem}
+</style>
+</head>
+<body>
+<a class="back-link" href="index.html">← Volver al índice</a>
+<header>
+  <div class="eyebrow">RcD Salamanca · Discipulado General</div>
+  <h1>Cómo nos llegó la Biblia</h1>
+  <div class="subtitle">Capítulo 4</div>
+</header>
+<div class="tabs-wrap">
+  <button class="tab-btn active" onclick="switchTab('flashcards',this)">📖 Tarjetas</button>
+  <button class="tab-btn" onclick="switchTab('fillblank',this)">✏️ Completa</button>
+  <button class="tab-btn" onclick="switchTab('quiz',this)">🧠 Quiz</button>
+  <button class="tab-btn" onclick="switchTab('progreso',this)">📊 Progreso</button>
+</div>
+<div id="screen-flashcards" class="screen active">
+  <div class="prog-row"><span id="fc-counter">1 / ?</span><span id="fc-theme-label"></span></div>
+  <div class="prog-track"><div class="prog-fill" id="fc-bar" style="width:0%"></div></div>
+  <div class="flashcard" id="flashcard" onclick="flipCard()">
+    <div class="fc-front" id="fc-front"></div>
+    <div class="fc-back" id="fc-back"></div>
+  </div>
+  <div class="card-btns" id="btns-flip">
+    <button class="btn primary" onclick="flipCard();event.stopPropagation()">👁 Ver versículo completo</button>
+  </div>
+  <div class="card-btns" id="btns-eval" style="display:none">
+    <button class="btn red" onclick="markCard(false)">✗ Necesito repasar</button>
+    <button class="btn green" onclick="markCard(true)">✓ ¡Lo sé!</button>
+  </div>
+</div>
+<div id="screen-fillblank" class="screen">
+  <div class="section-title">Toca cada espacio en blanco para revelar la palabra clave</div>
+  <div id="fill-wrap"></div>
+  <button class="btn" style="width:100%;margin-top:.5rem" onclick="renderFill()">↺ Ocultar todo de nuevo</button>
+</div>
+<div id="screen-quiz" class="screen">
+  <div class="quiz-meta" id="quiz-meta">Pregunta 1 · Puntuación: 0</div>
+  <div class="quiz-card"><div class="quiz-ref" id="quiz-ref"></div><div class="quiz-q" id="quiz-q"></div></div>
+  <div class="options" id="quiz-opts"></div>
+  <button class="btn primary" id="quiz-next" style="display:none;width:100%" onclick="nextQuiz()">Siguiente →</button>
+</div>
+<div id="screen-progreso" class="screen">
+  <div class="section-title">Tu progreso en este capítulo</div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="s-k">0</div><div class="stat-lbl">Dominados</div></div>
+    <div class="stat-box"><div class="stat-num" id="s-l">0</div><div class="stat-lbl">Aprendiendo</div></div>
+    <div class="stat-box"><div class="stat-num" id="s-n">0</div><div class="stat-lbl">Sin repasar</div></div>
+  </div>
+  <div id="verse-list"></div>
+  <button class="btn red" style="width:100%;margin-top:1rem" onclick="resetAll()">↺ Reiniciar progreso</button>
+</div>
+<footer><p>Reconcíliate con Dios · Salamanca · Reina Valera 1960</p></footer>
+<script src="data.js"></script>
+<script>
+const CAP_ID = 'cap-04';
+const chapData = CHAPTERS.find(c => c.id === CAP_ID);
+const VERSES = chapData.verses;
+const QUIZ = chapData.quiz;
+const STORAGE_KEY = 'rcd_' + CAP_ID;
+
+let fcIdx=0, fcFlipped=false, progress={};
+let qIdx=0, qScore=0, qTotal=0, qAnswered=false, qOrder=[];
+
+function loadP(){try{progress=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');}catch(e){progress={};}}
+function saveP(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(progress));}catch(e){}}
+loadP();
+
+function switchTab(tab,el){
+  document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('screen-'+tab).classList.add('active');
+  if(tab==='fillblank') renderFill();
+  if(tab==='quiz'){qOrder=[...Array(QUIZ.length).keys()].sort(()=>Math.random()-.5);qIdx=0;qScore=0;qTotal=0;showQuiz();}
+  if(tab==='progreso') renderProgress();
+}
+
+function renderCard(){
+  const v=VERSES[fcIdx];
+  const fc=document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  fcFlipped=false;
+  document.getElementById('btns-flip').style.display='flex';
+  document.getElementById('btns-eval').style.display='none';
+  document.getElementById('fc-front').innerHTML=`<div class="fc-ref">${v.ref}</div><div class="fc-theme">${v.theme}</div><div class="fc-question">"${v.question}"</div><div class="fc-hint">— Toca para ver el versículo —</div>`;
+  document.getElementById('fc-back').innerHTML=`<div class="fc-ref">${v.ref}</div><div class="fc-verse">${v.verse}</div><div class="fc-keyword">📌 ${v.keyword}</div>`;
+  document.getElementById('fc-theme-label').textContent=v.theme;
+  const n=VERSES.length;
+  document.getElementById('fc-counter').textContent=(fcIdx+1)+' / '+n;
+  document.getElementById('fc-bar').style.width=((fcIdx+1)/n*100)+'%';
+}
+
+function flipCard(){
+  if(fcFlipped)return;
+  fcFlipped=true;
+  document.getElementById('flashcard').classList.add('flipped');
+  document.getElementById('btns-flip').style.display='none';
+  document.getElementById('btns-eval').style.display='flex';
+}
+
+function markCard(knew){
+  const ref=VERSES[fcIdx].ref;
+  if(!progress[ref])progress[ref]={k:0,s:0};
+  progress[ref].s++;
+  if(knew)progress[ref].k++;
+  saveP();
+  fcIdx=(fcIdx+1)%VERSES.length;
+  renderCard();
+}
+
+function renderFill(){
+  let html='';
+  VERSES.forEach((v,fi)=>{
+    const words=v.keyword.split('·').map(w=>w.trim()).filter(w=>w.length>3);
+    if(!words.length){html+=`<div class="fill-card"><div class="fill-ref">${v.ref}</div><div class="fill-text">${v.verse.substring(0,120)}...</div></div>`;return;}
+    const word=words[0];
+    const idx=v.verse.indexOf(word);
+    let text;
+    if(idx>=0){
+      const before=v.verse.substring(0,idx);
+      const after=v.verse.substring(idx+word.length);
+      const dashes='_'.repeat(Math.min(word.length,14));
+      text=before.substring(Math.max(0,before.length-80))+`<span class="blank" id="b${fi}" data-w="${word.replace(/"/g,'&quot;')}" onclick="reveal('b${fi}')">${dashes}</span>`+after.substring(0,80)+'...';
+    } else {
+      const dashes='_'.repeat(Math.min(word.length,14));
+      text=v.verse.substring(0,60)+`... <span class="blank" id="b${fi}" data-w="${word.replace(/"/g,'&quot;')}" onclick="reveal('b${fi}')">${dashes}</span> ...`;
+    }
+    html+=`<div class="fill-card"><div class="fill-ref">${v.ref}</div><div class="fill-text">${text}</div><div class="fill-hint">Toca el espacio en blanco para revelar</div></div>`;
+  });
+  document.getElementById('fill-wrap').innerHTML=html;
+}
+
+function reveal(id){const el=document.getElementById(id);if(el){el.textContent=el.dataset.w;el.classList.add('shown');}}
+
+function showQuiz(){
+  if(qIdx>=QUIZ.length){document.getElementById('quiz-meta').textContent='¡Completado! Puntuación final: '+qScore+' / '+qTotal;document.getElementById('quiz-next').textContent='Repetir quiz';document.getElementById('quiz-next').style.display='block';document.getElementById('quiz-opts').innerHTML='';document.getElementById('quiz-card')||document.querySelector('.quiz-card').querySelector('.quiz-q').textContent='';return;}
+  const q=QUIZ[qOrder[qIdx]];
+  document.getElementById('quiz-ref').textContent=q.ref;
+  document.getElementById('quiz-q').textContent=q.q;
+  document.getElementById('quiz-meta').textContent='Pregunta '+(qIdx+1)+' de '+QUIZ.length+' · Puntuación: '+qScore+'/'+qTotal;
+  const opts=document.getElementById('quiz-opts');
+  opts.innerHTML=q.opts.map((o,i)=>`<button class="opt" onclick="answerQ(${i})">${o}</button>`).join('');
+  document.getElementById('quiz-next').style.display='none';
+  qAnswered=false;
+}
+
+function answerQ(i){
+  if(qAnswered)return;
+  qAnswered=true;qTotal++;
+  const q=QUIZ[qOrder[qIdx]];
+  if(i===q.c)qScore++;
+  document.getElementById('quiz-opts').querySelectorAll('.opt').forEach((o,idx)=>{
+    o.disabled=true;
+    if(idx===q.c)o.classList.add('correct');
+    else if(idx===i)o.classList.add('wrong');
+  });
+  document.getElementById('quiz-meta').textContent='Pregunta '+(qIdx+1)+' de '+QUIZ.length+' · Puntuación: '+qScore+'/'+qTotal;
+  document.getElementById('quiz-next').style.display='block';
+}
+
+function nextQuiz(){
+  qIdx++;
+  if(qIdx>=QUIZ.length){qOrder=[...Array(QUIZ.length).keys()].sort(()=>Math.random()-.5);qIdx=0;qScore=0;qTotal=0;}
+  showQuiz();
+}
+
+function renderProgress(){
+  let k=0,l=0,n=0,html='';
+  VERSES.forEach(v=>{
+    const p=progress[v.ref];
+    let dot='n',lbl='Sin repasar';
+    if(p&&p.s>0){if(p.k/p.s>=.8&&p.s>=3){dot='k';lbl='Dominado ✓';k++;}else{dot='l';lbl='Aprendiendo ('+p.k+'/'+p.s+')';l++;}}else n++;
+    html+=`<div class="vrow"><div class="vdot ${dot}"></div><div><div class="vrow-ref">${v.ref}</div><div class="vrow-theme">${v.theme}</div></div><div class="vrow-status">${lbl}</div></div>`;
+  });
+  document.getElementById('s-k').textContent=k;
+  document.getElementById('s-l').textContent=l;
+  document.getElementById('s-n').textContent=n;
+  document.getElementById('verse-list').innerHTML=html;
+}
+
+function resetAll(){if(confirm('¿Reiniciar el progreso de este capítulo?')){progress={};saveP();renderProgress();}}
+
+renderCard();
+</script>
+</body>
+</html>
