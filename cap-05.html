@@ -144,7 +144,921 @@ footer{text-align:center;font-family:Arial,sans-serif;font-size:11px;color:var(-
   <button class="btn red" style="width:100%;margin-top:1rem" onclick="resetAll()">↺ Reiniciar progreso</button>
 </div>
 <footer><p>Reconcíliate con Dios · Salamanca · Reina Valera 1960</p></footer>
-<script src="data.js"></script>
+<script>
+// ============================================================
+// DATOS DEL DISCIPULADO GENERAL — RcD Salamanca
+// ============================================================
+
+const CHAPTERS = [
+  {
+    id: "cap-00",
+    num: "00",
+    title: "Oidores y Hacedores",
+    subtitle: "Introducción",
+    file: "cap-00.html",
+    color: "#3b6b3e",
+    verses: [
+      {
+        ref: "Mateo 28:16-20",
+        theme: "La Gran Comisión",
+        keyword: "Id · haced discípulos · bautizando · enseñando",
+        question: "¿Qué tres mandatos dio Jesús en la Gran Comisión y qué promesa añadió?",
+        verse: "Los once discípulos se fueron a Galilea, al monte donde Jesús les había ordenado. Y Jesús se acercó y les habló diciendo: Toda potestad me es dada en el cielo y en la tierra. Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo; enseñándoles que guarden todas las cosas que os he mandado; y he aquí yo estoy con vosotros todos los días, hasta el fin del mundo. Amén."
+      },
+      {
+        ref: "Santiago 1:19-26",
+        theme: "Oidores y hacedores",
+        keyword: "Sed hacedores de la palabra · no tan solamente oidores",
+        question: "¿Qué advertencia central da Santiago sobre escuchar la Palabra sin practicarla?",
+        verse: "Todo hombre sea pronto para oír, tardo para hablar, tardo para airarse; porque la ira del hombre no obra la justicia de Dios. Desechando toda inmundicia, recibid con mansedumbre la palabra implantada. Pero sed hacedores de la palabra, y no tan solamente oidores, engañándoos a vosotros mismos. El oidor que no es hacedor es semejante al que ve su rostro en un espejo y luego olvida cómo era. Mas el que mira en la perfecta ley, la de la libertad, y persevera, siendo hacedor de la obra, éste será bienaventurado en lo que hace."
+      },
+      {
+        ref: "Romanos 2:13",
+        theme: "Justificación",
+        keyword: "Los hacedores de la ley serán justificados",
+        question: "Según Romanos 2:13, ¿quiénes son los justos ante Dios: los que oyen o los que hacen?",
+        verse: "Porque no son los oidores de la ley los justos ante Dios, sino los hacedores de la ley serán justificados."
+      },
+      {
+        ref: "Lucas 6:46-49",
+        theme: "Cimientos",
+        keyword: "¿Por qué me llamáis Señor? · casa sobre la roca · casa sobre arena",
+        question: "¿A qué compara Jesús al que oye y hace su Palabra, y al que solo oye pero no la hace?",
+        verse: "¿Por qué me llamáis, Señor, Señor, y no hacéis lo que yo digo? Todo aquel que viene a mí, oye mis palabras y las hace, es semejante al hombre que edificó su casa sobre la roca; vino la inundación y el río dio con ímpetu contra ella, pero no la pudo mover. Mas el que oyó y no hizo, semejante es al hombre que edificó sobre tierra sin fundamento; el río dio con ímpetu contra ella y fue grande la ruina."
+      },
+      {
+        ref: "Gálatas 5:14-15",
+        theme: "Armonía en la iglesia",
+        keyword: "Amarás a tu prójimo como a ti mismo · si os mordéis y os coméis",
+        question: "¿En qué sola palabra se resume toda la ley, y qué advertencia da el v.15?",
+        verse: "Porque toda la ley en esta sola palabra se cumple: Amarás a tu prójimo como a ti mismo. Pero si os mordéis y os coméis unos a otros, mirad que también no os consumáis unos a otros."
+      },
+      {
+        ref: "Salmo 133:1 y 3",
+        theme: "Armonía y bendición",
+        keyword: "Habitar juntos en armonía · allí envía Jehová bendición y vida eterna",
+        question: "¿Qué promesa da el Salmo 133 cuando los hermanos viven en armonía?",
+        verse: "¡Mirad cuán bueno y cuán delicioso es habitar los hermanos juntos en armonía! Porque allí envía Jehová bendición, y vida eterna."
+      }
+    ],
+    quiz: [
+      { ref:"Mateo 28:19", q:"Completa: 'Por tanto, id, y haced discípulos a todas las naciones, ______'", opts:["predicando el evangelio","bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo","sanando a los enfermos","enseñándoles la ley de Moisés"], c:1 },
+      { ref:"Mateo 28:20", q:"¿Qué promesa cierra la Gran Comisión?", opts:["Recibiréis el Espíritu Santo","Os daré poder para hacer milagros","Yo estoy con vosotros todos los días, hasta el fin del mundo","Seréis mis testigos en toda la tierra"], c:2 },
+      { ref:"Santiago 1:22", q:"Completa: 'Sed hacedores de la palabra, y no tan solamente oidores, ______'", opts:["guardando los mandamientos","buscando la sabiduría","engañándoos a vosotros mismos","esperando la promesa del Padre"], c:2 },
+      { ref:"Santiago 1:25", q:"El hacedor de la obra que persevera en la perfecta ley será:", opts:["prosperado en todo","bienaventurado en lo que hace","lleno del Espíritu Santo","exaltado delante de los hombres"], c:1 },
+      { ref:"Romanos 2:13", q:"¿Quiénes serán justificados ante Dios?", opts:["Los que leen la ley cada día","Los oidores de la ley","Los hacedores de la ley","Los que conocen toda la Escritura"], c:2 },
+      { ref:"Lucas 6:46", q:"¿Qué pregunta hace Jesús en Lucas 6:46?", opts:["¿Por qué buscáis entre los muertos?","¿Por qué me llamáis Señor, Señor, y no hacéis lo que yo digo?","¿Soy yo el camino, la verdad y la vida?","¿Por qué dudáis, hombres de poca fe?"], c:1 },
+      { ref:"Gálatas 5:14", q:"¿En qué sola palabra se cumple toda la ley según Gálatas 5:14?", opts:["Adorarás al Señor tu Dios","No harás a otro lo que no quieras","Amarás a tu prójimo como a ti mismo","Busca primero el reino de Dios"], c:2 },
+      { ref:"Salmo 133:1 y 3", q:"Completa: 'Mirad cuán bueno y cuán delicioso es ______; porque allí envía Jehová ______'", opts:["orar en el templo / lluvia abundante","habitar los hermanos juntos en armonía / bendición y vida eterna","buscar a Dios / su Espíritu","alabar a Dios / salvación"], c:1 },
+    ]
+  },
+  {
+    id: "cap-01",
+    num: "01",
+    title: "Teología de la Salvación",
+    subtitle: "Capítulo 1",
+    file: "cap-01.html",
+    color: "#5a3e6b",
+    verses: [
+      {
+        ref: "Isaías 53:4-7",
+        theme: "El sacrificio de Cristo",
+        keyword: "Herido por nuestras rebeliones · molido por nuestros pecados",
+        question: "¿Qué describe Isaías 53 sobre el sufrimiento de Jesús por la humanidad?",
+        verse: "Ciertamente llevó él nuestras enfermedades, y sufrió nuestros dolores; y nosotros le tuvimos por azotado, por herido de Dios y abatido. Mas él herido fue por nuestras rebeliones, molido por nuestros pecados; el castigo de nuestra paz fue sobre él, y por su llaga fuimos nosotros curados. Todos nosotros nos descarriamos como ovejas, cada cual se apartó por su camino; mas Jehová cargó en él el pecado de todos nosotros."
+      },
+      {
+        ref: "Juan 3:3, 5-6",
+        theme: "Nacer de nuevo",
+        keyword: "El que no naciere de nuevo no puede ver el reino · nacer de agua y del Espíritu",
+        question: "¿Qué le dijo Jesús a Nicodemo sobre la necesidad de nacer de nuevo?",
+        verse: "De cierto, de cierto te digo, que el que no naciere de nuevo, no puede ver el reino de Dios. De cierto, de cierto te digo, que el que no naciere de agua y del Espíritu, no puede entrar en el reino de Dios. Lo que es nacido de la carne, carne es; y lo que es nacido del Espíritu, espíritu es."
+      },
+      {
+        ref: "Juan 1:11-13",
+        theme: "Hijos de Dios",
+        keyword: "Mas a todos los que le recibieron · potestad de ser hechos hijos de Dios",
+        question: "Según Juan 1:11-13, ¿qué potestad recibe el que recibe a Jesús y cree en su nombre?",
+        verse: "A lo suyo vino, y los suyos no le recibieron. Mas a todos los que le recibieron, a los que creen en su nombre, les dio potestad de ser hechos hijos de Dios; los cuales no son engendrados de sangre, ni de voluntad de carne, ni de voluntad de varón, sino de Dios."
+      },
+      {
+        ref: "Efesios 1:13-14",
+        theme: "El sello del Espíritu",
+        keyword: "Fuisteis sellados con el Espíritu Santo · arras de nuestra herencia",
+        question: "¿Qué sucede cuando creemos en Cristo según Efesios 1:13-14?",
+        verse: "En él también vosotros, habiendo oído la palabra de verdad, el evangelio de vuestra salvación, y habiendo creído en él, fuisteis sellados con el Espíritu Santo de la promesa, que es las arras de nuestra herencia hasta la redención de la posesión adquirida, para alabanza de su gloria."
+      },
+      {
+        ref: "Juan 8:31-34, 36",
+        theme: "Libertad en Cristo",
+        keyword: "La verdad os hará libres · todo el que hace pecado es esclavo",
+        question: "¿Qué condición pone Jesús para ser verdadero discípulo y conocer la libertad?",
+        verse: "Si vosotros permaneciereis en mi palabra, seréis verdaderamente mis discípulos; y conoceréis la verdad, y la verdad os hará libres. Jesús les respondió: De cierto, de cierto os digo, que todo aquel que hace pecado, esclavo es del pecado. Así que, si el Hijo os libertare, seréis verdaderamente libres."
+      },
+      {
+        ref: "Hechos 8:13",
+        theme: "Fe y bautismo",
+        keyword: "También creyó Simón · habiéndose bautizado",
+        question: "¿Qué hizo Simón el mago al escuchar el evangelio de Felipe en Samaria?",
+        verse: "También creyó Simón mismo, y habiéndose bautizado, estaba siempre con Felipe; y viendo las señales y grandes milagros que se hacían, estaba atónito."
+      },
+      {
+        ref: "Hechos 8:17-23",
+        theme: "El corazón recto",
+        keyword: "No tienes parte en este asunto · tu corazón no es recto · arrepiéntete",
+        question: "¿Qué le reprochó Pedro a Simón y qué le pidió que hiciera?",
+        verse: "Entonces les imponían las manos, y recibían el Espíritu Santo. No tienes tú parte ni suerte en este asunto, porque tu corazón no es recto delante de Dios. Arrepiéntete, pues, de esta tu maldad, y ruega a Dios, si quizás te sea perdonado el pensamiento de tu corazón; porque en hiel de amargura y en prisión de maldad veo que estás."
+      },
+      {
+        ref: "Romanos 8:14-17",
+        theme: "Hijos adoptivos",
+        keyword: "Guiados por el Espíritu · espíritu de adopción · Abba Padre",
+        question: "¿Qué testimonio da el Espíritu Santo a los hijos de Dios según Romanos 8?",
+        verse: "Porque todos los que son guiados por el Espíritu de Dios, éstos son hijos de Dios. Pues no habéis recibido el espíritu de esclavitud para estar otra vez en temor, sino que habéis recibido el espíritu de adopción, por el cual clamamos: ¡Abba, Padre! El Espíritu mismo da testimonio a nuestro espíritu, de que somos hijos de Dios."
+      },
+      {
+        ref: "2ª Corintios 1:21-22",
+        theme: "Sellados por Dios",
+        keyword: "Nos ha sellado · arras del Espíritu en nuestros corazones",
+        question: "¿Qué garantía nos ha dado Dios según 2 Corintios 1:21-22?",
+        verse: "Y el que nos confirma con vosotros en Cristo, y el que nos ungió, es Dios, el cual también nos ha sellado, y nos ha dado las arras del Espíritu en nuestros corazones."
+      },
+      {
+        ref: "Efesios 4:29-32",
+        theme: "Nueva naturaleza",
+        keyword: "No contristéis al Espíritu Santo · quítense amargura · sed benignos",
+        question: "¿Qué actitudes pertenecen a la vieja naturaleza y cuáles a la nueva según Efesios 4?",
+        verse: "Ninguna palabra corrompida salga de vuestra boca, sino la que sea buena para la necesaria edificación. Y no contristéis al Espíritu Santo de Dios, con el cual fuisteis sellados para el día de la redención. Quítense de vosotros toda amargura, enojo, ira, gritería y maledicencia, y toda malicia. Antes sed benignos unos con otros, misericordiosos, perdonándoos unos a otros, como Dios también os perdonó a vosotros en Cristo."
+      },
+      {
+        ref: "Apocalipsis 3:1-3, 5",
+        theme: "Vigilancia espiritual",
+        keyword: "Tienes nombre de que vives y estás muerto · sé vigilante · el que venciere",
+        question: "¿Qué advertencia hace Jesús a la iglesia de Sardis y qué promesa da al que venciere?",
+        verse: "Yo conozco tus obras, que tienes nombre de que vives, y estás muerto. Sé vigilante, y afirma las otras cosas que están para morir; porque no he hallado tus obras perfectas delante de Dios. Acuérdate, pues, de lo que has recibido y oído; y guárdalo, y arrepiéntete. El que venciere será vestido de vestiduras blancas; y no borraré su nombre del libro de la vida."
+      },
+      {
+        ref: "Apocalipsis 17:8",
+        theme: "El libro de la vida",
+        keyword: "Nombres no escritos desde la fundación del mundo en el libro de la vida",
+        question: "¿Qué dice Apocalipsis 17:8 sobre los que no están escritos en el libro de la vida?",
+        verse: "La bestia que has visto, era, y no es; y está para subir del abismo e ir a perdición; y los moradores de la tierra, aquellos cuyos nombres no están escritos desde la fundación del mundo en el libro de la vida, se asombrarán viendo la bestia que era, y no es, y será."
+      },
+      {
+        ref: "Apocalipsis 20:15",
+        theme: "El juicio final",
+        keyword: "El que no se halló inscrito en el libro de la vida fue lanzado al lago de fuego",
+        question: "¿Cuál es el destino del que no está inscrito en el libro de la vida según Apocalipsis 20?",
+        verse: "Y el que no se halló inscrito en el libro de la vida fue lanzado al lago de fuego."
+      }
+    ],
+    quiz: [
+      { ref:"Isaías 53:5", q:"Completa: 'Mas él herido fue por nuestras rebeliones, ______'", opts:["y sufrió nuestros dolores","molido por nuestros pecados","llevó él nuestras enfermedades","por su llaga fuimos curados"], c:1 },
+      { ref:"Juan 3:3", q:"¿Qué dijo Jesús a Nicodemo sobre ver el reino de Dios?", opts:["Solo el que ora constantemente puede verlo","El que no naciere de nuevo no puede verlo","El que guarda los mandamientos entrará","Solo los judíos pueden ver el reino"], c:1 },
+      { ref:"Juan 1:12", q:"¿Qué reciben los que creen en el nombre de Jesús?", opts:["La vida eterna inmediata","Potestad de ser hechos hijos de Dios","El don de lenguas","Sanidad de todas sus enfermedades"], c:1 },
+      { ref:"Efesios 1:13", q:"¿Con qué fuimos sellados al creer en Cristo?", opts:["Con la sangre del cordero","Con el sello de los apóstoles","Con el Espíritu Santo de la promesa","Con el agua del bautismo"], c:2 },
+      { ref:"Juan 8:32", q:"¿Qué os hará libres según Jesús en Juan 8?", opts:["El arrepentimiento","El bautismo","La oración constante","La verdad"], c:3 },
+      { ref:"Romanos 8:16", q:"¿Qué hace el Espíritu Santo según Romanos 8:16?", opts:["Nos da lenguas de ángeles","Da testimonio a nuestro espíritu de que somos hijos de Dios","Intercede por nosotros con gemidos","Nos guarda del pecado"], c:1 },
+      { ref:"Efesios 4:30", q:"¿Con qué fuisteis sellados para el día de la redención?", opts:["Con la Palabra de Dios","Con el bautismo en agua","Con el Espíritu Santo de Dios","Con la fe de los padres"], c:2 },
+      { ref:"Apocalipsis 20:15", q:"¿Qué le sucede al que no está inscrito en el libro de la vida?", opts:["Es juzgado según sus obras","Recibe una segunda oportunidad","Fue lanzado al lago de fuego","Permanece en el Hades para siempre"], c:2 },
+    ]
+  },
+  {
+    id: "cap-02",
+    num: "02",
+    title: "El Bautismo",
+    subtitle: "Capítulo 2",
+    file: "cap-02.html",
+    color: "#1a5276",
+    verses: [
+      {
+        ref: "Isaías 10:27",
+        theme: "El yugo destruido",
+        keyword: "Su carga será quitada · el yugo se pudrirá a causa de la unción",
+        question: "¿Qué promesa da Isaías 10:27 sobre la carga del enemigo y la unción?",
+        verse: "Acontecerá en aquel tiempo que su carga será quitada de tu hombro, y su yugo de tu cerviz, y el yugo se pudrirá a causa de la unción."
+      },
+      {
+        ref: "Isaías 59:19-21",
+        theme: "El Espíritu levanta bandera",
+        keyword: "Vendrá el enemigo como río · el Espíritu de Jehová levantará bandera contra él",
+        question: "¿Qué promesa da Dios cuando el enemigo viene como río según Isaías 59?",
+        verse: "Y temerán desde el occidente el nombre de Jehová, y desde el nacimiento del sol su gloria; porque vendrá el enemigo como río, mas el Espíritu de Jehová levantará bandera contra él. Y vendrá el Redentor a Sión, y a los que se volvieren de la iniquidad en Jacob, dice Jehová. Y este será mi pacto con ellos, dijo Jehová: El Espíritu mío que está sobre ti, y mis palabras que puse en tu boca, no faltarán de tu boca, ni de la boca de tus hijos, dijo Jehová, desde ahora y para siempre."
+      },
+      {
+        ref: "Isaías 66:13",
+        theme: "El Espíritu Consolador",
+        keyword: "Como aquel a quien consuela su madre · así os consolaré yo",
+        question: "¿Cómo describe Isaías 66:13 el consuelo que Dios da a su pueblo?",
+        verse: "Como aquel a quien consuela su madre, así os consolaré yo a vosotros, y en Jerusalén tomaréis consuelo."
+      },
+      {
+        ref: "Mateo 3:11",
+        theme: "Bautismo del Espíritu",
+        keyword: "Él os bautizará en Espíritu Santo y fuego",
+        question: "¿Cuál es la diferencia entre el bautismo de Juan y el bautismo que haría Jesús?",
+        verse: "Yo a la verdad os bautizo en agua para arrepentimiento; pero el que viene tras mí, cuyo calzado yo no soy digno de llevar, es más poderoso que yo; él os bautizará en Espíritu Santo y fuego."
+      },
+      {
+        ref: "Marcos 16:14-18",
+        theme: "El mandato de bautizar",
+        keyword: "El que creyere y fuere bautizado será salvo · estas señales seguirán",
+        question: "¿Qué mandato y qué promesa dio Jesús sobre el bautismo y las señales en Marcos 16?",
+        verse: "Id por todo el mundo y predicad el evangelio a toda criatura. El que creyere y fuere bautizado, será salvo; mas el que no creyere, será condenado. Y estas señales seguirán a los que creen: En mi nombre echarán fuera demonios; hablarán nuevas lenguas; sobre los enfermos pondrán sus manos, y sanarán."
+      },
+      {
+        ref: "Juan 1:32-33",
+        theme: "El bautizador del Espíritu",
+        keyword: "Vi al Espíritu que descendía · ése es el que bautiza con el Espíritu Santo",
+        question: "¿Qué testimonio dio Juan el Bautista sobre Jesús y el Espíritu Santo?",
+        verse: "También dio Juan testimonio, diciendo: Vi al Espíritu que descendía del cielo como paloma, y permaneció sobre él. Y yo no le conocía; pero el que me envió a bautizar con agua, aquél me dijo: Sobre quien veas descender el Espíritu y que permanece sobre él, ése es el que bautiza con el Espíritu Santo."
+      },
+      {
+        ref: "Hechos 1:5",
+        theme: "La promesa del Padre",
+        keyword: "Seréis bautizados con el Espíritu Santo dentro de no muchos días",
+        question: "¿Qué prometió Jesús a sus discípulos antes de ascender al cielo en Hechos 1:5?",
+        verse: "Porque Juan ciertamente bautizó con agua, mas vosotros seréis bautizados con el Espíritu Santo dentro de no muchos días."
+      },
+      {
+        ref: "Hechos 2:1-4",
+        theme: "Pentecostés",
+        keyword: "Fueron todos llenos del Espíritu Santo · comenzaron a hablar en otras lenguas",
+        question: "¿Qué sucedió el día de Pentecostés cuando el Espíritu Santo descendió?",
+        verse: "Cuando llegó el día de Pentecostés, estaban todos unánimes juntos. Y de repente vino del cielo un estruendo como de un viento recio que soplaba, el cual llenó toda la casa donde estaban sentados; y se les aparecieron lenguas repartidas, como de fuego, asentándose sobre cada uno de ellos. Y fueron todos llenos del Espíritu Santo, y comenzaron a hablar en otras lenguas, según el Espíritu les daba que hablasen."
+      },
+      {
+        ref: "Hechos 8:34-38",
+        theme: "El eunuco etíope",
+        keyword: "Si crees de todo corazón bien puedes · descendieron ambos al agua",
+        question: "¿Qué condición puso Felipe para bautizar al eunuco etíope?",
+        verse: "Felipe dijo: Si crees de todo corazón, bien puedes. Y respondiendo, dijo: Creo que Jesucristo es el Hijo de Dios. Y mandó parar el carro; y descendieron ambos al agua, Felipe y el eunuco, y le bautizó."
+      },
+      {
+        ref: "Hechos 10:47",
+        theme: "El Espíritu cae primero",
+        keyword: "¿Puede alguno impedir el agua para que no sean bautizados estos que han recibido el Espíritu?",
+        question: "¿Qué preguntó Pedro cuando el Espíritu Santo cayó sobre los gentiles antes del bautismo?",
+        verse: "¿Puede acaso alguno impedir el agua, para que no sean bautizados estos que han recibido el Espíritu Santo también como nosotros?"
+      },
+      {
+        ref: "Efesios 2:8-9",
+        theme: "Salvación por gracia",
+        keyword: "Por gracia sois salvos por medio de la fe · no por obras",
+        question: "¿Cómo viene la salvación según Efesios 2:8-9 y qué descarta explícitamente?",
+        verse: "Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe."
+      },
+      {
+        ref: "Romanos 6:1-4",
+        theme: "Sepultados con Cristo",
+        keyword: "Bautizados en su muerte · sepultados con él · andemos en vida nueva",
+        question: "¿Qué significa el bautismo según Romanos 6:1-4?",
+        verse: "¿Qué, pues, diremos? ¿Perseveraremos en el pecado para que la gracia abunde? En ninguna manera. Porque los que hemos muerto al pecado, ¿cómo viviremos aún en él? ¿O no sabéis que todos los que hemos sido bautizados en Cristo Jesús, hemos sido bautizados en su muerte? Porque somos sepultados juntamente con él para muerte por el bautismo, a fin de que como Cristo resucitó de los muertos por la gloria del Padre, así también nosotros andemos en vida nueva."
+      },
+      {
+        ref: "Hechos 22:16",
+        theme: "Levántate y bautízate",
+        keyword: "Levántate y bautízate y lava tus pecados invocando su nombre",
+        question: "¿Qué le dijo Ananías a Saulo de Tarso después de que Jesús se le apareciera?",
+        verse: "Ahora, pues, ¿por qué te detienes? Levántate y bautízate, y lava tus pecados, invocando su nombre."
+      },
+      {
+        ref: "1 Corintios 10:1-2",
+        theme: "El bautismo en el AT",
+        keyword: "Todos en Moisés fueron bautizados en la nube y en el mar",
+        question: "¿Qué tipo de bautismo describe Pablo en 1 Corintios 10 al hablar del éxodo?",
+        verse: "Porque no quiero, hermanos, que ignoréis que nuestros padres todos estuvieron bajo la nube, y todos pasaron el mar; y todos en Moisés fueron bautizados en la nube y en el mar."
+      },
+      {
+        ref: "Efesios 1:13",
+        theme: "Sellados al creer",
+        keyword: "Habiendo creído en él fuisteis sellados con el Espíritu Santo",
+        question: "¿Cuándo fuimos sellados con el Espíritu Santo según Efesios 1:13?",
+        verse: "En él también vosotros, habiendo oído la palabra de verdad, el evangelio de vuestra salvación, y habiendo creído en él, fuisteis sellados con el Espíritu Santo de la promesa."
+      },
+      {
+        ref: "Efesios 4:30",
+        theme: "No contristéis al Espíritu",
+        keyword: "No contristéis al Espíritu Santo · sellados para el día de la redención",
+        question: "¿Qué advertencia da Efesios 4:30 sobre el Espíritu Santo?",
+        verse: "Y no contristéis al Espíritu Santo de Dios, con el cual fuisteis sellados para el día de la redención."
+      },
+      {
+        ref: "Hechos 2:38",
+        theme: "Arrepentimiento y bautismo",
+        keyword: "Arrepentíos · bautícese cada uno · recibiréis el don del Espíritu Santo",
+        question: "¿Qué instruyó Pedro al pueblo el día de Pentecostés en Hechos 2:38?",
+        verse: "Pedro les dijo: Arrepentíos, y bautícese cada uno de vosotros en el nombre de Jesucristo para perdón de los pecados; y recibiréis el don del Espíritu Santo."
+      }
+    ],
+    quiz: [
+      { ref:"Isaías 10:27", q:"¿A causa de qué se pudrirá el yugo según Isaías 10:27?", opts:["A causa de la oración","A causa de la unción","A causa del bautismo","A causa del ayuno"], c:1 },
+      { ref:"Isaías 59:19", q:"Completa: 'Vendrá el enemigo como río, mas ______'", opts:["Jehová lo destruirá con su espada","el Espíritu de Jehová levantará bandera contra él","su pueblo lo vencerá","la oración de los santos lo detendrá"], c:1 },
+      { ref:"Mateo 3:11", q:"¿Con qué bautizará Jesús según Juan el Bautista?", opts:["Con agua y arrepentimiento","Con la Palabra de Dios","Con Espíritu Santo y fuego","Con aceite de unción"], c:2 },
+      { ref:"Marcos 16:16", q:"Según Marcos 16:16, el que creyere y fuere bautizado:", opts:["Recibirá grandes riquezas","Será salvo","Podrá echar demonios","Hablará en lenguas"], c:1 },
+      { ref:"Hechos 8:37", q:"¿Qué condición puso Felipe para bautizar al eunuco?", opts:["Que ayunara tres días","Que diezmara fielmente","Si crees de todo corazón bien puedes","Que fuera circuncidado primero"], c:2 },
+      { ref:"Romanos 6:4", q:"El bautismo nos sepulta con Cristo para que:", opts:["Seamos justificados ante Dios","Andemos en vida nueva","Recibamos el Espíritu Santo","Seamos libres del pecado"], c:1 },
+      { ref:"Efesios 2:8", q:"¿Cómo somos salvos según Efesios 2:8?", opts:["Por obras de justicia","Por el bautismo en agua","Por gracia mediante la fe","Por guardar los mandamientos"], c:2 },
+      { ref:"Hechos 2:38", q:"¿Qué prometió Pedro a los que se arrepintieran y bautizaran?", opts:["La prosperidad en todo","El perdón de pecados y el don del Espíritu Santo","La sanidad de enfermedades","Protección de todo mal"], c:1 },
+    ]
+  },
+  {
+    id: "cap-03",
+    num: "03",
+    title: "Liberación",
+    subtitle: "Capítulo 3",
+    file: "cap-03.html",
+    color: "#7d3c27",
+    verses: [
+      {
+        ref: "Lucas 11:20",
+        theme: "El reino de Dios ha llegado",
+        keyword: "Si por el dedo de Dios echo fuera los demonios · el reino de Dios ha llegado a vosotros",
+        question: "¿Qué señal daba Jesús de que el reino de Dios había llegado según Lucas 11:20?",
+        verse: "Pero si por el dedo de Dios echo yo fuera los demonios, ciertamente el reino de Dios ha llegado a vosotros."
+      },
+      {
+        ref: "Romanos 6:12-15, 23",
+        theme: "No reine el pecado",
+        keyword: "No reine el pecado en vuestro cuerpo mortal · la paga del pecado es muerte",
+        question: "¿Qué manda Pablo sobre el pecado en el cuerpo y cuál es la paga del pecado?",
+        verse: "No reine, pues, el pecado en vuestro cuerpo mortal, de modo que lo obedezcáis en sus concupiscencias; ni tampoco presentéis vuestros miembros al pecado como instrumentos de iniquidad, sino presentaos vosotros mismos a Dios como vivos de entre los muertos, y vuestros miembros a Dios como instrumentos de justicia. Porque el pecado no se enseñoreará de vosotros; pues no estáis bajo la ley, sino bajo la gracia. Porque la paga del pecado es muerte, mas la dádiva de Dios es vida eterna en Cristo Jesús Señor nuestro."
+      },
+      {
+        ref: "Lucas 4:18",
+        theme: "El ministerio de liberación",
+        keyword: "El Espíritu del Señor está sobre mí · a pregonar libertad a los cautivos",
+        question: "¿Para qué fue ungido Jesús según Lucas 4:18?",
+        verse: "El Espíritu del Señor está sobre mí, por cuanto me ha ungido para dar buenas nuevas a los pobres; me ha enviado a sanar a los quebrantados de corazón; a pregonar libertad a los cautivos, y vista a los ciegos; a poner en libertad a los oprimidos."
+      },
+      {
+        ref: "Salmo 19:12",
+        theme: "Pecados ocultos",
+        keyword: "¿Quién podrá entender sus propios errores? · líbrame de los que me son ocultos",
+        question: "¿Qué pide el salmista en Salmo 19:12 sobre los pecados que no conocemos?",
+        verse: "¿Quién podrá entender sus propios errores? Líbrame de los que me son ocultos."
+      },
+      {
+        ref: "Efesios 4:26-27",
+        theme: "No dar lugar al diablo",
+        keyword: "Airaos pero no pequéis · no deis lugar al diablo",
+        question: "¿Qué advertencia da Pablo sobre la ira y el diablo en Efesios 4:26-27?",
+        verse: "Airaos, pero no pequéis; no se ponga el sol sobre vuestro enojo, ni deis lugar al diablo."
+      },
+      {
+        ref: "1 Juan 3:8-11",
+        theme: "Cristo deshace las obras del diablo",
+        keyword: "Para esto apareció el Hijo de Dios · para deshacer las obras del diablo",
+        question: "¿Para qué apareció el Hijo de Dios según 1 Juan 3:8?",
+        verse: "El que practica el pecado es del diablo; porque el diablo peca desde el principio. Para esto apareció el Hijo de Dios, para deshacer las obras del diablo. Todo aquel que es nacido de Dios, no practica el pecado, porque la simiente de Dios permanece en él; y no puede pecar, porque es nacido de Dios. En esto se manifiestan los hijos de Dios, y los hijos del diablo: todo aquel que no hace justicia, y que no ama a su hermano, no es de Dios."
+      },
+      {
+        ref: "Mateo 12:43",
+        theme: "El espíritu inmundo que vuelve",
+        keyword: "Cuando el espíritu inmundo sale · busca reposo · vuelve con siete peores",
+        question: "¿Qué enseña Jesús en Mateo 12:43 sobre el espíritu inmundo que sale de una persona?",
+        verse: "Cuando el espíritu inmundo sale del hombre, anda por lugares secos, buscando reposo, y no lo halla. Entonces dice: Volveré a mi casa de donde salí; y cuando llega, la halla desocupada, barrida y adornada. Entonces va, y toma consigo otros siete espíritus peores que él, y entrados, moran allí; y el postrer estado de aquel hombre viene a ser peor que el primero."
+      }
+    ],
+    quiz: [
+      { ref:"Lucas 11:20", q:"Si Jesús echa fuera los demonios por el dedo de Dios, ¿qué ha llegado?", opts:["El tiempo del juicio","El reino de Dios","La segunda venida","El fin del mundo"], c:1 },
+      { ref:"Romanos 6:23", q:"Completa: 'La paga del pecado es muerte, mas la dádiva de Dios es ______'", opts:["salud y prosperidad","vida eterna en Cristo Jesús","perdón y restauración","paz y gozo"], c:1 },
+      { ref:"Lucas 4:18", q:"¿Para qué fue ungido Jesús según Lucas 4:18?", opts:["Para hacer milagros y señales","Para dar buenas nuevas, sanar, pregonar libertad y liberar oprimidos","Para enseñar la ley de Moisés","Para restaurar el reino a Israel"], c:1 },
+      { ref:"Salmo 19:12", q:"¿De qué pide ser librado el salmista en el Salmo 19:12?", opts:["De sus enemigos","De la pobreza","De los pecados ocultos","De la enfermedad"], c:2 },
+      { ref:"Efesios 4:27", q:"¿Qué no debemos darle al diablo según Efesios 4:27?", opts:["Nuestra adoración","Lugar en nuestra vida","Nuestros bienes","Acceso a la iglesia"], c:1 },
+      { ref:"1 Juan 3:8", q:"¿Para qué apareció el Hijo de Dios según 1 Juan 3:8?", opts:["Para establecer su iglesia","Para deshacer las obras del diablo","Para cumplir la ley","Para juzgar al mundo"], c:1 },
+      { ref:"Mateo 12:43", q:"Cuando el espíritu inmundo vuelve y encuentra la casa vacía, ¿qué hace?", opts:["Se va a otro lugar","Toma consigo siete espíritus peores y entran a morar allí","Pide permiso para entrar","Espera fuera hasta que le dejan entrar"], c:1 },
+    ]
+  },
+  {
+    id: "cap-05",
+    num: "05",
+    title: "El Servicio en el Reino",
+    subtitle: "Capítulo 5",
+    file: "cap-05.html",
+    color: "#1a5e3a",
+    verses: [
+      {
+        ref: "Proverbios 16:6",
+        theme: "Misericordia y verdad",
+        keyword: "Con misericordia y verdad se corrige el pecado · con el temor de Jehová los hombres se apartan del mal",
+        question: "¿Cómo se corrige el pecado y cómo se aparta el hombre del mal según Proverbios 16:6?",
+        verse: "Con misericordia y verdad se corrige el pecado, y con el temor de Jehová los hombres se apartan del mal."
+      },
+      {
+        ref: "Mateo 5:38-39",
+        theme: "La otra mejilla",
+        keyword: "Oísteis que fue dicho ojo por ojo · pero yo os digo: no resistáis al que es malo",
+        question: "¿Qué principio del reino enseña Jesús sobre cómo responder al mal en Mateo 5:38-39?",
+        verse: "Oísteis que fue dicho: Ojo por ojo, y diente por diente. Pero yo os digo: No resistáis al que es malo; antes, a cualquiera que te hiera en la mejilla derecha, vuélvele también la otra."
+      },
+      {
+        ref: "Mateo 5:41",
+        theme: "La segunda milla",
+        keyword: "A cualquiera que te obligue a llevar carga una milla · ve con él dos",
+        question: "¿Qué enseña Jesús sobre ir la segunda milla en Mateo 5:41?",
+        verse: "Y a cualquiera que te obligue a llevar carga por una milla, ve con él dos."
+      },
+      {
+        ref: "Mateo 18:21-22",
+        theme: "El perdón ilimitado",
+        keyword: "¿Hasta siete veces? No te digo hasta siete sino hasta setenta veces siete",
+        question: "¿Cuántas veces debemos perdonar según Jesús en Mateo 18:21-22?",
+        verse: "Entonces se le acercó Pedro y le dijo: Señor, ¿cuántas veces perdonaré a mi hermano que peque contra mí? ¿Hasta siete? Jesús le dijo: No te digo hasta siete, sino aun hasta setenta veces siete."
+      },
+      {
+        ref: "Mateo 20:13-16",
+        theme: "Los últimos serán primeros",
+        keyword: "Los últimos serán primeros y los primeros últimos",
+        question: "¿Qué principio del reino enseña Jesús con la parábola de los obreros de la viña?",
+        verse: "Él, respondiendo, dijo a uno de ellos: Amigo, no te hago agravio; ¿no conviniste conmigo en un denario? Toma lo que es tuyo, y vete; pero quiero dar a este postrero, como a ti. ¿No me es lícito hacer lo que quiero con lo mío? ¿O tienes tú envidia, porque yo soy bueno? Así, los últimos serán primeros, y los primeros, últimos; porque muchos son llamados, mas pocos escogidos."
+      },
+      {
+        ref: "Mateo 20:25-28",
+        theme: "Servir para ser grande",
+        keyword: "El que quiera ser grande entre vosotros será vuestro servidor · el Hijo del Hombre no vino para ser servido sino para servir",
+        question: "¿Cómo define Jesús la grandeza en el reino de Dios en Mateo 20:25-28?",
+        verse: "Entonces Jesús, llamándolos, dijo: Sabéis que los gobernantes de las naciones se enseñorean de ellas, y los que son grandes ejercen sobre ellas potestad. Mas entre vosotros no será así, sino que el que quiera hacerse grande entre vosotros será vuestro servidor, y el que quiera ser el primero entre vosotros será vuestro siervo; como el Hijo del Hombre no vino para ser servido, sino para servir, y para dar su vida en rescate por muchos."
+      },
+      {
+        ref: "Juan 12:26",
+        theme: "Honra al que sirve",
+        keyword: "Si alguno me sirve, sígame · si alguno me sirviere mi Padre le honrará",
+        question: "¿Qué promesa hace Jesús al que le sirve fielmente en Juan 12:26?",
+        verse: "Si alguno me sirve, sígame; y donde yo estuviere, allí también estará mi servidor. Si alguno me sirviere, mi Padre le honrará."
+      },
+      {
+        ref: "Hechos 11:17",
+        theme: "¿Quién era yo para estorbar a Dios?",
+        keyword: "¿Quién era yo que pudiese estorbar a Dios?",
+        question: "¿Qué pregunta retórica hace Pedro en Hechos 11:17 sobre obedecer a Dios?",
+        verse: "Si Dios, pues, les concedió también el mismo don que a nosotros que hemos creído en el Señor Jesucristo, ¿quién era yo que pudiese estorbar a Dios?"
+      },
+      {
+        ref: "Romanos 12:21",
+        theme: "Vencer el mal con el bien",
+        keyword: "No seas vencido de lo malo · sino vence con el bien el mal",
+        question: "¿Cómo manda Pablo vencer el mal en Romanos 12:21?",
+        verse: "No seas vencido de lo malo, sino vence con el bien el mal."
+      },
+      {
+        ref: "Efesios 4:2",
+        theme: "Humildad y paciencia",
+        keyword: "Con toda humildad y mansedumbre · soportándoos con paciencia los unos a los otros en amor",
+        question: "¿Qué actitudes describe Pablo en Efesios 4:2 para vivir dignamente la vocación cristiana?",
+        verse: "Con toda humildad y mansedumbre, soportándoos con paciencia los unos a los otros en amor."
+      },
+      {
+        ref: "Efesios 4:23-24",
+        theme: "Renovación de la mente",
+        keyword: "Renovaos en el espíritu de vuestra mente · vestíos del nuevo hombre",
+        question: "¿Qué transformación describe Pablo en Efesios 4:23-24?",
+        verse: "Y renovaos en el espíritu de vuestra mente, y vestíos del nuevo hombre, creado según Dios en la justicia y santidad de la verdad."
+      },
+      {
+        ref: "Gálatas 6:10",
+        theme: "Hacer bien a todos",
+        keyword: "Hagamos bien a todos · mayormente a los de la familia de la fe",
+        question: "¿A quiénes debemos hacer bien según Gálatas 6:10?",
+        verse: "Así que, según tengamos oportunidad, hagamos bien a todos, y mayormente a los de la familia de la fe."
+      },
+      {
+        ref: "Jeremías 17:9-10",
+        theme: "El corazón engañoso",
+        keyword: "Engañoso es el corazón más que todas las cosas · yo Jehová que escudriño la mente",
+        question: "¿Qué dice Dios sobre el corazón humano en Jeremías 17:9-10?",
+        verse: "Engañoso es el corazón más que todas las cosas, y perverso; ¿quién lo conocerá? Yo Jehová, que escudriño la mente, que pruebo el corazón, para dar a cada uno según su camino, según el fruto de sus obras."
+      },
+      {
+        ref: "Gálatas 2:4",
+        theme: "Falsos hermanos",
+        keyword: "Falsos hermanos introducidos a escondidas · para espiarnos nuestra libertad",
+        question: "¿Quiénes eran los falsos hermanos de los que habla Pablo en Gálatas 2:4?",
+        verse: "Y esto a pesar de los falsos hermanos introducidos a escondidas, que entraban para espiar nuestra libertad que tenemos en Cristo Jesús, para reducirnos a esclavitud."
+      },
+      {
+        ref: "2ª Pedro 2:1-3",
+        theme: "Falsos profetas",
+        keyword: "Habrá entre vosotros falsos maestros · negarán al Señor · muchos seguirán sus disoluciones",
+        question: "¿Qué advierte Pedro sobre los falsos maestros en 2 Pedro 2:1-3?",
+        verse: "Pero hubo también falsos profetas entre el pueblo, como habrá entre vosotros falsos maestros, que introducirán encubiertamente herejías destructoras, y aun negarán al Señor que los rescató, atrayendo sobre sí mismos destrucción repentina. Y muchos seguirán sus disoluciones, por causa de los cuales el camino de la verdad será blasfemado, y por avaricia harán mercadería de vosotros con palabras fingidas."
+      },
+      {
+        ref: "1ª Tesalonicenses 4:11-12",
+        theme: "Vida ordenada",
+        keyword: "Que os ocupéis en vuestros negocios · trabajéis con vuestras manos",
+        question: "¿Qué estilo de vida recomienda Pablo en 1 Tesalonicenses 4:11-12?",
+        verse: "Y que procuréis tener tranquilidad, y ocuparos en vuestros negocios, y trabajar con vuestras manos de la manera que os hemos mandado, a fin de que os conduzcáis honradamente para con los de afuera, y no tengáis necesidad de nada."
+      },
+      {
+        ref: "Filipenses 1:15-18",
+        theme: "Predicar a Cristo de todas formas",
+        keyword: "Algunos predican a Cristo por envidia · otros por amor · de todas formas Cristo es anunciado",
+        question: "¿Cómo reacciona Pablo ante los que predican a Cristo con malas motivaciones?",
+        verse: "Algunos, a la verdad, predican a Cristo por envidia y contienda; pero otros de buena voluntad. Los unos anuncian a Cristo por contención, no sinceramente, pensando añadir aflicción a mis prisiones; pero los otros por amor. ¿Qué, pues? Que no obstante, de todas maneras, o por pretexto o por verdad, Cristo es anunciado; y en esto me gozo, y me gozaré aún."
+      },
+      {
+        ref: "2ª Corintios 11:13",
+        theme: "Falsos apóstoles",
+        keyword: "Falsos apóstoles · obreros fraudulentos · se disfrazan como apóstoles de Cristo",
+        question: "¿Cómo describe Pablo a los falsos apóstoles en 2 Corintios 11:13?",
+        verse: "Porque éstos son falsos apóstoles, obreros fraudulentos, que se disfrazan como apóstoles de Cristo."
+      },
+      {
+        ref: "1ª Juan 4:1",
+        theme: "Probad los espíritus",
+        keyword: "No creáis a todo espíritu · probad los espíritus si son de Dios",
+        question: "¿Qué manda Juan hacer con los espíritus y por qué?",
+        verse: "Amados, no creáis a todo espíritu, sino probad los espíritus si son de Dios; porque muchos falsos profetas han salido por el mundo."
+      },
+      {
+        ref: "2ª Tesalonicenses 3:10",
+        theme: "El que no trabaja no coma",
+        keyword: "Si alguno no quiere trabajar tampoco coma",
+        question: "¿Qué principio establece Pablo en 2 Tesalonicenses 3:10 sobre el trabajo?",
+        verse: "Porque también cuando estábamos con vosotros, os ordenábamos esto: Si alguno no quiere trabajar, tampoco coma."
+      }
+    ],
+    quiz: [
+      { ref:"Mateo 20:28", q:"¿Por qué vino el Hijo del Hombre según Mateo 20:28?", opts:["Para reinar sobre Israel","Para enseñar la ley","Para servir y dar su vida en rescate","Para juzgar a los pecadores"], c:2 },
+      { ref:"Juan 12:26", q:"¿Qué promete Jesús al que le sirve en Juan 12:26?", opts:["Que nunca sufrirá","Mi Padre le honrará","Recibirá grandes riquezas","Tendrá autoridad sobre los demonios"], c:1 },
+      { ref:"Hechos 11:17", q:"¿Qué pregunta retórica hace Pedro en Hechos 11:17?", opts:["¿Cómo puede Dios amar a los gentiles?","¿Quién era yo que pudiese estorbar a Dios?","¿No es este el don del Espíritu Santo?","¿Debo ir a los gentiles o a los judíos?"], c:1 },
+      { ref:"Mateo 18:22", q:"¿Cuántas veces debo perdonar a mi hermano según Jesús?", opts:["Hasta tres veces","Hasta siete veces","Hasta setenta veces siete","Solo si se arrepiente"], c:2 },
+      { ref:"Romanos 12:21", q:"Completa: 'No seas vencido de lo malo, sino ______'", opts:["huye de todo mal","vence con el bien el mal","resiste al diablo","ora sin cesar"], c:1 },
+      { ref:"Jeremías 17:9", q:"¿Qué dice Dios sobre el corazón humano en Jeremías 17:9?", opts:["Es bueno cuando está consagrado","Engañoso es más que todas las cosas","Solo Dios puede purificarlo","Es débil pero renovable"], c:1 },
+      { ref:"1ª Juan 4:1", q:"¿Qué debemos hacer con los espíritus según 1 Juan 4:1?", opts:["Aceptarlos si traen paz","Probarlos si son de Dios","Ignorarlos siempre","Huir de ellos"], c:1 },
+      { ref:"2ª Tesalonicenses 3:10", q:"Completa: 'Si alguno no quiere trabajar ______'", opts:["que lo enseñemos","tampoco coma","que sea reprendido","que ore más"], c:1 },
+    ]
+  },
+  {
+    id: "cap-06",
+    num: "06",
+    title: "La Visión",
+    subtitle: "Capítulo 6",
+    file: "cap-06.html",
+    color: "#4a235a",
+    verses: [
+      {
+        ref: "Lucas 24:49",
+        theme: "La promesa del Padre",
+        keyword: "He aquí, yo enviaré la promesa de mi Padre sobre vosotros",
+        question: "¿Qué prometió Jesús a sus discípulos antes de ascender según Lucas 24:49?",
+        verse: "He aquí, yo enviaré la promesa de mi Padre sobre vosotros; pero quedaos vosotros en la ciudad de Jerusalén, hasta que seáis investidos de poder desde lo alto."
+      },
+      {
+        ref: "1 Corintios 12:28-31",
+        theme: "Dones en la iglesia",
+        keyword: "A unos puso Dios en la iglesia: apóstoles, profetas, maestros · procurad los mejores dones",
+        question: "¿Qué orden de ministerios establece Dios en la iglesia según 1 Corintios 12:28?",
+        verse: "Y a unos puso Dios en la iglesia, primeramente apóstoles, luego profetas, lo tercero maestros, luego los que hacen milagros, después los que sanan, los que ayudan, los que administran, los que tienen don de lenguas. Procurad, pues, los dones mejores."
+      },
+      {
+        ref: "1 Corintios 9:16",
+        theme: "Necesidad de predicar",
+        keyword: "¡Ay de mí si no anunciare el evangelio!",
+        question: "¿Qué urgencia siente Pablo por predicar el evangelio en 1 Corintios 9:16?",
+        verse: "Pues si anuncio el evangelio, no tengo por qué gloriarme; porque me es impuesta necesidad; y ¡ay de mí si no anunciare el evangelio!"
+      },
+      {
+        ref: "Romanos 13:1",
+        theme: "Someterse a las autoridades",
+        keyword: "Toda persona se someta a las autoridades superiores · no hay autoridad sino de parte de Dios",
+        question: "¿Por qué debemos someternos a las autoridades según Romanos 13:1?",
+        verse: "Sométase toda persona a las autoridades superiores; porque no hay autoridad sino de parte de Dios, y las que hay, por Dios han sido establecidas."
+      },
+      {
+        ref: "Romanos 1:16",
+        theme: "El poder del evangelio",
+        keyword: "No me avergüenzo del evangelio · es poder de Dios para salvación",
+        question: "¿Por qué no se avergüenza Pablo del evangelio según Romanos 1:16?",
+        verse: "Porque no me avergüenzo del evangelio, porque es poder de Dios para salvación a todo aquel que cree; al judío primeramente, y también al griego."
+      },
+      {
+        ref: "1 Samuel 15:23",
+        theme: "La rebelión como adivinación",
+        keyword: "La rebelión es como pecado de adivinación · la obstinación como ídolos",
+        question: "¿A qué compara Dios la rebelión y la obstinación en 1 Samuel 15:23?",
+        verse: "Porque como pecado de adivinación es la rebelión, y como ídolos e idolatría la obstinación. Por cuanto tú desechaste la palabra de Jehová, él también te ha desechado para que no seas rey."
+      },
+      {
+        ref: "Hechos 16:6-7",
+        theme: "El Espíritu prohíbe",
+        keyword: "Les fue prohibido por el Espíritu Santo hablar la palabra en Asia",
+        question: "¿Qué hizo el Espíritu Santo cuando Pablo quería ir a predicar a Asia en Hechos 16:6-7?",
+        verse: "Y atravesando Frigia y la provincia de Galacia, les fue prohibido por el Espíritu Santo hablar la palabra en Asia; y cuando llegaron a Misia, intentaron ir a Bitinia, pero el Espíritu no se lo permitió."
+      },
+      {
+        ref: "Génesis 3:17",
+        theme: "La maldición por desobediencia",
+        keyword: "Por cuanto obedeciste a la voz de tu mujer · maldita será la tierra por tu causa",
+        question: "¿Cuál fue la consecuencia de que Adán obedeciera a Eva en lugar de a Dios?",
+        verse: "Y al hombre dijo: Por cuanto obedeciste a la voz de tu mujer, y comiste del árbol de que te mandé diciendo: No comerás de él; maldita será la tierra por tu causa; con dolor comerás de ella todos los días de tu vida."
+      },
+      {
+        ref: "1 Tesalonicenses 2:18",
+        theme: "Satanás estorba",
+        keyword: "Quisimos ir a vosotros · pero Satanás nos estorbó",
+        question: "¿Quién estorbó los planes de Pablo para visitar a los tesalonicenses?",
+        verse: "Por lo cual quisimos ir a vosotros, yo Pablo ciertamente una y otra vez; pero Satanás nos estorbó."
+      },
+      {
+        ref: "Judas 1:11-13",
+        theme: "Falsos en la iglesia",
+        keyword: "Siguieron el error de Balaam · nubes sin agua · estrellas errantes",
+        question: "¿Cómo describe Judas a los que se han infiltrado en la iglesia sin verdadera fe?",
+        verse: "¡Ay de ellos! porque han seguido el camino de Caín, y se lanzaron por lucro en el error de Balaam, y perecieron en la contradicción de Coré. Estos son manchas en vuestros ágapes, que comiendo impúdicamente con vosotros se apacientan a sí mismos; nubes sin agua, llevadas de acá para allá por los vientos; árboles otoñales, sin fruto, dos veces muertos y desarraigados; fieras ondas del mar, que espuman su propia vergüenza; estrellas errantes, para las cuales está reservada eternamente la oscuridad de las tinieblas."
+      },
+      {
+        ref: "Hechos 16:8-10",
+        theme: "La visión de Macedonia",
+        keyword: "Se le mostró una visión a Pablo · pasa a Macedonia y ayúdanos",
+        question: "¿Qué visión recibió Pablo en Hechos 16:9 que cambió su rumbo de predicación?",
+        verse: "Y pasando junto a Misia, descendieron a Troas. Y se le mostró a Pablo una visión de noche: un varón macedonio estaba en pie, rogándole y diciendo: Pasa a Macedonia y ayúdanos. Cuando vio la visión, en seguida procuramos partir para Macedonia, dando por cierto que Dios nos llamaba para que les anunciásemos el evangelio."
+      },
+      {
+        ref: "Habacuc 2:2-3",
+        theme: "Escribe la visión",
+        keyword: "Escribe la visión · aunque tardare espérala · porque sin duda vendrá",
+        question: "¿Qué mandó Dios hacer a Habacuc con la visión que le dio?",
+        verse: "Y Jehová me respondió, y dijo: Escribe la visión, y declárala en tablas, para que corra el que leyere en ella. Aunque la visión tardará aún por un tiempo, mas se apresura hacia el fin, y no mentirá; aunque tardare, espérala, porque sin duda vendrá, no tardará."
+      },
+      {
+        ref: "Hechos 26:19",
+        theme: "No fui rebelde a la visión",
+        keyword: "No fui rebelde a la visión celestial",
+        question: "¿Cómo describe Pablo su respuesta a la visión que Dios le dio en Hechos 26:19?",
+        verse: "Por lo cual, oh rey Agripa, no fui rebelde a la visión celestial."
+      }
+    ],
+    quiz: [
+      { ref:"Lucas 24:49", q:"¿Qué prometió Jesús enviar sobre los discípulos según Lucas 24:49?", opts:["Ángeles protectores","La promesa del Padre: poder desde lo alto","El libro de la ley","Un nuevo maestro"], c:1 },
+      { ref:"1 Corintios 9:16", q:"Completa: '¡Ay de mí si no ______!'", opts:["obedeciere al Señor","anunciare el evangelio","guardare los mandamientos","amara a mis hermanos"], c:1 },
+      { ref:"Romanos 1:16", q:"¿Por qué no se avergüenza Pablo del evangelio?", opts:["Porque lo recibió directamente de Dios","Porque es poder de Dios para salvación","Porque muchos lo han aceptado","Porque los apóstoles lo confirman"], c:1 },
+      { ref:"1 Samuel 15:23", q:"¿A qué compara Dios la rebelión en 1 Samuel 15:23?", opts:["Al orgullo y la soberbia","Al pecado de adivinación","A la idolatría pagana","Al asesinato"], c:1 },
+      { ref:"Hechos 16:6", q:"¿Qué hizo el Espíritu Santo cuando Pablo quería ir a Asia?", opts:["Le abrió las puertas","Les fue prohibido hablar la palabra","Le dio señales para continuar","Le envió un ángel"], c:1 },
+      { ref:"Habacuc 2:2-3", q:"¿Qué mandó Dios hacer a Habacuc con la visión?", opts:["Guardarla en su corazón","Escríbela y declárala en tablas","Proclamarla en el templo","Esperar a que se cumpla sin decir nada"], c:1 },
+      { ref:"Hechos 26:19", q:"¿Cómo respondió Pablo a la visión celestial?", opts:["La guardó en secreto por años","No fue rebelde a ella","La compartió solo con sus íntimos","La cuestionó con los apóstoles"], c:1 },
+    ]
+  },
+  {
+    id: "cap-07",
+    num: "07",
+    title: "Noviazgo y Matrimonio",
+    subtitle: "Capítulo 7",
+    file: "cap-07.html",
+    color: "#7d2e4a",
+    verses: [
+      {
+        ref: "Santiago 2:8-9",
+        theme: "Amar al prójimo",
+        keyword: "Si en verdad cumplís la ley real · amarás a tu prójimo como a ti mismo",
+        question: "¿Qué dice Santiago sobre cumplir la ley real de amar al prójimo?",
+        verse: "Si en verdad cumplís la ley real, conforme a la Escritura: Amarás a tu prójimo como a ti mismo, bien hacéis; pero si hacéis acepción de personas, cometéis pecado, y quedáis convictos por la ley como transgresores."
+      },
+      {
+        ref: "Hechos 19:15",
+        theme: "Identidad espiritual",
+        keyword: "A Jesús conozco y sé quién es Pablo · pero vosotros ¿quiénes sois?",
+        question: "¿Qué respondió el espíritu malo a los hijos de Esceva en Hechos 19:15?",
+        verse: "Pero respondiendo el espíritu malo, dijo: A Jesús conozco, y sé quién es Pablo; pero vosotros, ¿quiénes sois?"
+      },
+      {
+        ref: "Juan 13:34",
+        theme: "El mandamiento nuevo",
+        keyword: "Un mandamiento nuevo os doy: que os améis unos a otros como yo os he amado",
+        question: "¿Cuál es el mandamiento nuevo que da Jesús en Juan 13:34?",
+        verse: "Un mandamiento nuevo os doy: Que os améis unos a otros; como yo os he amado, que también os améis unos a otros."
+      },
+      {
+        ref: "Colosenses 3:18-19",
+        theme: "Esposos y esposas",
+        keyword: "Casadas, estad sujetas a vuestros maridos · maridos amad a vuestras mujeres",
+        question: "¿Qué instrucción da Pablo a esposas y esposos en Colosenses 3:18-19?",
+        verse: "Casadas, estad sujetas a vuestros maridos, como conviene en el Señor. Maridos, amad a vuestras mujeres, y no seáis ásperos con ellas."
+      },
+      {
+        ref: "1ª Juan 2:10",
+        theme: "Amor sin tropiezo",
+        keyword: "El que ama a su hermano permanece en la luz · no hay tropiezo en él",
+        question: "¿Qué promesa hay para el que ama a su hermano según 1 Juan 2:10?",
+        verse: "El que ama a su hermano, permanece en la luz, y en él no hay tropiezo."
+      },
+      {
+        ref: "1ª Timoteo 5:8",
+        theme: "Cuidar a la familia",
+        keyword: "Si alguno no provee para los suyos · ha negado la fe y es peor que un incrédulo",
+        question: "¿Qué dice Pablo sobre el que no provee para su familia en 1 Timoteo 5:8?",
+        verse: "Porque si alguno no provee para los suyos, y mayormente para los de su casa, ha negado la fe, y es peor que un incrédulo."
+      },
+      {
+        ref: "1ª Juan 3:14",
+        theme: "Pasados de muerte a vida",
+        keyword: "Nosotros sabemos que hemos pasado de muerte a vida · porque amamos a los hermanos",
+        question: "¿Cómo sabemos que hemos pasado de muerte a vida según 1 Juan 3:14?",
+        verse: "Nosotros sabemos que hemos pasado de muerte a vida, en que amamos a los hermanos. El que no ama a su hermano, permanece en muerte."
+      },
+      {
+        ref: "Hebreos 13:4",
+        theme: "Honroso el matrimonio",
+        keyword: "Honroso sea en todos el matrimonio · el lecho sin mancilla",
+        question: "¿Qué dice Hebreos 13:4 sobre el matrimonio y la inmoralidad sexual?",
+        verse: "Honroso sea en todos el matrimonio, y el lecho sin mancilla; pero a los fornicarios y a los adúlteros los juzgará Dios."
+      },
+      {
+        ref: "1ª Juan 3:18",
+        theme: "Amor de obra y verdad",
+        keyword: "No amemos de palabra ni de lengua · sino de hecho y en verdad",
+        question: "¿Cómo debe ser el amor cristiano según 1 Juan 3:18?",
+        verse: "Hijitos míos, no amemos de palabra ni de lengua, sino de hecho y en verdad."
+      },
+      {
+        ref: "Mateo 19:7-8",
+        theme: "El divorcio",
+        keyword: "Moisés permitió el divorcio por la dureza de vuestro corazón · mas al principio no fue así",
+        question: "¿Por qué permitió Moisés el divorcio según Jesús en Mateo 19:7-8?",
+        verse: "Le dijeron: ¿Por qué, pues, mandó Moisés dar carta de divorcio, y repudiarla? Él les dijo: Por la dureza de vuestro corazón Moisés os permitió repudiar a vuestras mujeres; mas al principio no fue así."
+      },
+      {
+        ref: "1ª Juan 4:7-8, 21",
+        theme: "Dios es amor",
+        keyword: "El que no ama no ha conocido a Dios · Dios es amor",
+        question: "¿Qué dice Juan sobre la relación entre amar y conocer a Dios en 1 Juan 4:7-8?",
+        verse: "Amados, amémonos unos a otros; porque el amor es de Dios. Todo aquel que ama, es nacido de Dios, y conoce a Dios. El que no ama, no ha conocido a Dios; porque Dios es amor. Y nosotros tenemos este mandamiento de él: El que ama a Dios, ame también a su hermano."
+      },
+      {
+        ref: "1ª Corintios 6:13",
+        theme: "El cuerpo para el Señor",
+        keyword: "El cuerpo no es para la fornicación sino para el Señor · y el Señor para el cuerpo",
+        question: "¿Para qué es el cuerpo según 1 Corintios 6:13?",
+        verse: "Los alimentos para el vientre, y el vientre para los alimentos; pero tanto al uno como a los otros destruirá Dios. Pero el cuerpo no es para la fornicación, sino para el Señor, y el Señor para el cuerpo."
+      },
+      {
+        ref: "Gálatas 6:10",
+        theme: "Hacer bien a todos",
+        keyword: "Hagamos bien a todos · mayormente a los de la familia de la fe",
+        question: "¿A quiénes manda Pablo hacer bien especialmente en Gálatas 6:10?",
+        verse: "Así que, según tengamos oportunidad, hagamos bien a todos, y mayormente a los de la familia de la fe."
+      },
+      {
+        ref: "2ª Corintios 6:14",
+        theme: "No yugo desigual",
+        keyword: "No os unáis en yugo desigual con los incrédulos",
+        question: "¿Qué advierte Pablo sobre unirse con los incrédulos en 2 Corintios 6:14?",
+        verse: "No os unáis en yugo desigual con los incrédulos; porque ¿qué compañerismo tiene la justicia con la injusticia? ¿Y qué comunión la luz con las tinieblas?"
+      },
+      {
+        ref: "Génesis 2:24",
+        theme: "El matrimonio desde el principio",
+        keyword: "Dejará el hombre a su padre y a su madre · se unirá a su mujer · serán una sola carne",
+        question: "¿Cuál es el principio del matrimonio establecido por Dios desde la creación en Génesis 2:24?",
+        verse: "Por tanto, dejará el hombre a su padre y a su madre, y se unirá a su mujer, y serán una sola carne."
+      },
+      {
+        ref: "Lucas 12:31",
+        theme: "Buscar primero el reino",
+        keyword: "Buscad el reino de Dios y todas estas cosas os serán añadidas",
+        question: "¿Qué promesa da Jesús al que busca primero el reino de Dios en Lucas 12:31?",
+        verse: "Mas buscad el reino de Dios, y todas estas cosas os serán añadidas."
+      },
+      {
+        ref: "Salmo 119:9",
+        theme: "Pureza en la juventud",
+        keyword: "¿Con qué limpiará el joven su camino? Con guardar tu palabra",
+        question: "¿Cómo puede el joven limpiar su camino según el Salmo 119:9?",
+        verse: "¿Con qué limpiará el joven su camino? Con guardar tu palabra."
+      },
+      {
+        ref: "Proverbios 4:23",
+        theme: "Guardar el corazón",
+        keyword: "Sobre toda cosa guardada guarda tu corazón · porque de él mana la vida",
+        question: "¿Por qué debemos guardar nuestro corazón sobre toda cosa según Proverbios 4:23?",
+        verse: "Sobre toda cosa guardada, guarda tu corazón; porque de él mana la vida."
+      }
+    ],
+    quiz: [
+      { ref:"Juan 13:34", q:"¿Cuál es el mandamiento nuevo que da Jesús?", opts:["Que guardéis el sábado","Que os améis unos a otros como yo os he amado","Que prediquéis el evangelio","Que bauticéis a todas las naciones"], c:1 },
+      { ref:"Colosenses 3:18-19", q:"¿Qué instrucción reciben los maridos en Colosenses 3:19?", opts:["Que sean cabeza del hogar","Que provean económicamente","Que amen a sus mujeres y no sean ásperos","Que enseñen la Palabra a sus hijos"], c:2 },
+      { ref:"1ª Timoteo 5:8", q:"El que no provee para los suyos según Pablo:", opts:["Debe ser reprendido públicamente","Ha negado la fe y es peor que un incrédulo","Perderá sus posesiones","Será disciplinado por la iglesia"], c:1 },
+      { ref:"Hebreos 13:4", q:"¿Qué dice Hebreos 13:4 sobre el matrimonio?", opts:["Es solo para quienes tienen vocación","Honroso sea en todos el matrimonio","Es un contrato que puede romperse","Es inferior al celibato"], c:1 },
+      { ref:"Génesis 2:24", q:"Completa: 'Por tanto, dejará el hombre a su padre y a su madre, y se unirá a su mujer, y ______'", opts:["vivirán en paz","serán una sola carne","tendrán la bendición de Dios","gobernarán juntos la creación"], c:1 },
+      { ref:"2ª Corintios 6:14", q:"¿Qué advierte Pablo en 2 Corintios 6:14?", opts:["Que no améis el dinero","No os unáis en yugo desigual con los incrédulos","Que huyáis de la fornicación","Que no os caséis precipitadamente"], c:1 },
+      { ref:"Proverbios 4:23", q:"¿Por qué debemos guardar el corazón sobre toda cosa?", opts:["Porque es engañoso y perverso","Porque de él mana la vida","Porque Dios lo prueba constantemente","Porque el diablo lo ataca"], c:1 },
+      { ref:"1ª Juan 4:8", q:"Completa: 'El que no ama, no ha conocido a Dios; porque ______'", opts:["Dios es justo","Dios es espíritu","Dios es amor","Dios es luz"], c:2 },
+    ]
+  }
+];
+
+// Versículos de todos los capítulos combinados para el estudio completo
+const ALL_VERSES = CHAPTERS.flatMap(ch =>
+  ch.verses.map(v => ({ ...v, chapter: ch.title, chapterNum: ch.num }))
+);
+
+const ALL_QUIZ = CHAPTERS.flatMap(ch =>
+  ch.quiz.map(q => ({ ...q, chapter: ch.title }))
+);
+
+// Añadir cap-04 y cap-08 al array CHAPTERS
+CHAPTERS.push(
+  {
+    id: "cap-04",
+    num: "04",
+    title: "Cómo nos llegó la Biblia",
+    subtitle: "Capítulo 4",
+    file: "cap-04.html",
+    color: "#2e4057",
+    infoOnly: true,
+    verses: [
+      {
+        ref: "2 Timoteo 3:16-17",
+        theme: "Inspiración de las Escrituras",
+        keyword: "Toda la Escritura es inspirada por Dios · útil para enseñar, redargüir, corregir",
+        question: "¿Qué dice Pablo sobre el origen y utilidad de las Escrituras en 2 Timoteo 3:16-17?",
+        verse: "Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia, a fin de que el hombre de Dios sea perfecto, enteramente preparado para toda buena obra."
+      },
+      {
+        ref: "2 Pedro 1:20-21",
+        theme: "Profetas movidos por el Espíritu",
+        keyword: "Ninguna profecía de la Escritura es de interpretación privada · los santos hombres hablaron siendo inspirados por el Espíritu Santo",
+        question: "¿Cómo llegaron los profetas a escribir las Escrituras según 2 Pedro 1:20-21?",
+        verse: "Entendiendo primero esto, que ninguna profecía de la Escritura es de interpretación privada, porque nunca la profecía fue traída por voluntad humana, sino que los santos hombres de Dios hablaron siendo inspirados por el Espíritu Santo."
+      },
+      {
+        ref: "Salmo 119:105",
+        theme: "La Palabra como lámpara",
+        keyword: "Lámpara es a mis pies tu palabra · y lumbrera a mi camino",
+        question: "¿Cómo describe el Salmo 119:105 la función de la Palabra de Dios?",
+        verse: "Lámpara es a mis pies tu palabra, y lumbrera a mi camino."
+      },
+      {
+        ref: "Isaías 40:8",
+        theme: "La Palabra permanece para siempre",
+        keyword: "La hierba se seca · la flor se marchita · mas la palabra de nuestro Dios permanece para siempre",
+        question: "¿Qué contraste hace Isaías 40:8 entre la fragilidad humana y la permanencia de la Palabra?",
+        verse: "Sécase la hierba, marchítase la flor; mas la palabra del Dios nuestro permanece para siempre."
+      }
+    ],
+    quiz: [
+      { ref:"2 Timoteo 3:16", q:"Completa: 'Toda la Escritura es inspirada por Dios, y útil para ______'", opts:["la predicación y evangelismo","enseñar, redargüir, corregir, instruir en justicia","deleite espiritual y meditación","conocer la voluntad de Dios"], c:1 },
+      { ref:"2 Pedro 1:21", q:"¿Cómo hablaron los santos hombres de Dios?", opts:["Por su propia sabiduría","Por revelación de ángeles","Siendo inspirados por el Espíritu Santo","Por visiones y sueños solamente"], c:2 },
+      { ref:"Salmo 119:105", q:"¿Qué es la Palabra de Dios para el salmista?", opts:["Su tesoro más preciado","Lámpara a sus pies y lumbrera a su camino","Su escudo y fortaleza","Su gozo y alegría"], c:1 },
+      { ref:"Isaías 40:8", q:"Completa: 'Sécase la hierba, marchítase la flor; mas ______'", opts:["el justo permanecerá en pie","la Palabra de Dios permanece para siempre","el amor de Dios no tiene fin","los mandamientos de Dios son eternos"], c:1 },
+    ]
+  },
+  {
+    id: "cap-08",
+    num: "08",
+    title: "Los Últimos Tiempos",
+    subtitle: "Capítulo 8",
+    file: "cap-08.html",
+    color: "#1a3a5c",
+    verses: [
+      {
+        ref: "Salmo 90:12",
+        theme: "Sabiduría ante lo fugaz del tiempo",
+        keyword: "Enséñanos de tal modo a contar nuestros días que traigamos al corazón sabiduría",
+        question: "¿Qué pide el salmista a Dios sobre el tiempo en el Salmo 90:12?",
+        verse: "Enséñanos de tal modo a contar nuestros días, que traigamos al corazón sabiduría."
+      },
+      {
+        ref: "Gálatas 4:4",
+        theme: "El cumplimiento del tiempo",
+        keyword: "Cuando vino el cumplimiento del tiempo · Dios envió a su Hijo",
+        question: "¿Qué sucedió cuando se cumplió el tiempo establecido por Dios según Gálatas 4:4?",
+        verse: "Pero cuando vino el cumplimiento del tiempo, Dios envió a su Hijo, nacido de mujer y nacido bajo la ley."
+      },
+      {
+        ref: "Isaías 9:6-7",
+        theme: "El niño prometido",
+        keyword: "Un niño nos es nacido · un hijo nos es dado · el gobierno sobre su hombro · su nombre será Emmanuel",
+        question: "¿Qué profetizó Isaías sobre el hijo prometido y su reino en Isaías 9:6-7?",
+        verse: "Porque un niño nos es nacido, hijo nos es dado, y el principado sobre su hombro; y se llamará su nombre Admirable, Consejero, Dios Fuerte, Padre Eterno, Príncipe de Paz. Lo dilatado de su imperio y la paz no tendrán límite, sobre el trono de David y sobre su reino, disponiéndolo y confirmándolo en juicio y en justicia desde ahora y para siempre. El celo de Jehová de los ejércitos hará esto."
+      },
+      {
+        ref: "Juan 5:39",
+        theme: "Las Escrituras testifican de Cristo",
+        keyword: "Escudriñad las Escrituras · ellas son las que dan testimonio de mí",
+        question: "¿Qué dijo Jesús sobre la relación entre las Escrituras y su persona en Juan 5:39?",
+        verse: "Escudriñad las Escrituras; porque a vosotros os parece que en ellas tenéis la vida eterna; y ellas son las que dan testimonio de mí."
+      },
+      {
+        ref: "Apocalipsis 22:12",
+        theme: "La venida de Cristo",
+        keyword: "He aquí yo vengo pronto · y mi galardón conmigo · para recompensar a cada uno según su obra",
+        question: "¿Qué promesa y advertencia da Jesús en Apocalipsis 22:12?",
+        verse: "He aquí yo vengo pronto, y mi galardón conmigo, para recompensar a cada uno según sea su obra."
+      }
+    ],
+    quiz: [
+      { ref:"Salmo 90:12", q:"¿Qué pide el salmista que Dios le enseñe en el Salmo 90:12?", opts:["A orar sin cesar","A contar sus días para traer sabiduría al corazón","A guardar sus mandamientos","A confiar en su providencia"], c:1 },
+      { ref:"Gálatas 4:4", q:"¿Qué hizo Dios cuando vino el cumplimiento del tiempo?", opts:["Envió el Espíritu Santo sobre todos","Estableció la iglesia en Jerusalén","Envió a su Hijo nacido de mujer","Reveló las profecías a los apóstoles"], c:2 },
+      { ref:"Isaías 9:6", q:"¿Cuál NO es un nombre del hijo prometido en Isaías 9:6?", opts:["Admirable Consejero","Dios Fuerte","Rey de Reyes","Príncipe de Paz"], c:2 },
+      { ref:"Juan 5:39", q:"Según Jesús en Juan 5:39, ¿de quién dan testimonio las Escrituras?", opts:["De los profetas","De los apóstoles","De él mismo","Del pueblo de Israel"], c:2 },
+      { ref:"Apocalipsis 22:12", q:"Completa: 'He aquí yo vengo pronto, y mi galardón conmigo, para ______'", opts:["establecer mi reino eterno","recompensar a cada uno según sea su obra","juzgar a las naciones","renovar todas las cosas"], c:1 },
+    ]
+  }
+);
+
+</script>
 <script>
 const CAP_ID = 'cap-05';
 const chapData = CHAPTERS.find(c => c.id === CAP_ID);
